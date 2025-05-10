@@ -1,9 +1,10 @@
+import Header from "./components/Header";
 import "./index.css";
 
 function App() {
   return (
     <>
-      <h2 className="text-3xl font-bold underline">Hello</h2>
+      <Header />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 import HeroSection from "./components/landing_page/HeroSection";
 import ToolList from "./components/landing_page/ToolList";
 
@@ -17,6 +18,7 @@ function App() {
           <ToolList />
         </section>
       </div>
+      <Footer />
     </>
   );
 }

@@ -12,6 +12,7 @@ package-lock.json
 node_modules
 dist
 dist-ssr
+build
 *.local
 
 .ipynb_checkpoints
@@ -22,6 +23,7 @@ dist-ssr
 !.vscode/extensions.json
 .idea
 .DS_Store
+.react-router/
 *.suo
 *.ntvs*
 *.njsproj

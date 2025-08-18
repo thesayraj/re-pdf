@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import logo from "../assets/app_icon.png";
+import { Link } from "react-router";
 
 function Header() {
   const [hidden, setHidden] = useState(false);
@@ -45,25 +46,27 @@ function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-start items-center h-13">
           {/* Logo */}
-          <div className="flex items-center space-x-2 hover:transform hover:scale-105 transition duration-300">
-            <img src={logo} alt="logo" className="h-13 w-13" />
-            <span className="text-xl font-bold text-gray-800">RePDF</span>
-          </div>
+          <Link to="/">
+            <div className="flex items-center space-x-2 hover:transform hover:scale-102 transition duration-300">
+              <img src={logo} alt="logo" className="h-13 w-13" />
+              <span className="text-xl font-bold text-gray-800">RePDF</span>
+            </div>
+          </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-6 ml-32">
-            <a href="#merge" className="text-gray-600 hover:text-blue-500">
+            <Link to="/merge" className="text-gray-600 hover:text-blue-500">
               Merge
-            </a>
-            <a href="#split" className="text-gray-600 hover:text-blue-500">
+            </Link>
+            <Link to="/split" className="text-gray-600 hover:text-blue-500">
               Split
-            </a>
-            <a href="#compress" className="text-gray-600 hover:text-blue-500">
+            </Link>
+            <Link to="/compress" className="text-gray-600 hover:text-blue-500">
               Compress
-            </a>
-            <a href="#convert" className="text-gray-600 hover:text-blue-500">
+            </Link>
+            <Link to="/convert" className="text-gray-600 hover:text-blue-500">
               Convert
-            </a>
+            </Link>
           </nav>
 
           {/* Hamburger Menu Button */}
@@ -97,34 +100,34 @@ function Header() {
           }`}
         >
           <nav className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
-            <a
-              href="#merge"
+            <Link
+              to="/merge"
               onClick={closeMobileMenu}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-500 hover:bg-gray-50"
             >
               Merge
-            </a>
-            <a
-              href="#split"
+            </Link>
+            <Link
+              to="/split"
               onClick={closeMobileMenu}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-500 hover:bg-gray-50"
             >
               Split
-            </a>
-            <a
-              href="#compress"
+            </Link>
+            <Link
+              to="/compress"
               onClick={closeMobileMenu}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-500 hover:bg-gray-50"
             >
               Compress
-            </a>
-            <a
-              href="#convert"
+            </Link>
+            <Link
+              to="/convert"
               onClick={closeMobileMenu}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-500 hover:bg-gray-50"
             >
               Convert
-            </a>
+            </Link>
           </nav>
         </div>
       </div>

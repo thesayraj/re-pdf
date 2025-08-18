@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router';
 
 const Footer: React.FC = () => {
   return (
@@ -6,15 +7,15 @@ const Footer: React.FC = () => {
       <div className="max-w-5xl mx-auto flex flex-col items-center space-y-3 text-center">
         <span className="text-base font-medium">&copy; 2025 RePDF</span>
         <div className="flex space-x-6">
-          <a href="/privacy" className="hover:underline">
+          <Link to="/privacy" className="hover:underline">
             Privacy
-          </a>
-          <a href="/terms" className="hover:underline">
+          </Link>
+          <Link to="/terms" className="hover:underline">
             Terms
-          </a>
-          <a href="/contact" className="hover:underline">
+          </Link>
+          <Link to="/contact" className="hover:underline">
             Contact
-          </a>
+          </Link>
         </div>
         <span className="text-xs text-gray-500">
           Edit PDFs easily in your browser. No sign-up required.

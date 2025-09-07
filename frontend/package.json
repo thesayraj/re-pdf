@@ -15,6 +15,7 @@
     "@react-router/node": "^7.8.0",
     "@react-router/serve": "^7.8.0",
     "@tailwindcss/vite": "^4.0.17",
+    "axios": "^1.11.0",
     "isbot": "^5",
     "lucide-react": "^0.525.0",
     "react": "^19.0.0",

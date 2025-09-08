@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router";
 
 interface ToolCardProps {
   icon: React.ElementType;
@@ -6,6 +7,7 @@ interface ToolCardProps {
   description: string;
   iconBgClass?: string;
   iconColorClass?: string;
+  route: string;
 }
 
 const ToolCard: React.FC<ToolCardProps> = ({
@@ -14,9 +16,20 @@ const ToolCard: React.FC<ToolCardProps> = ({
   description,
   iconBgClass = "bg-blue-100",
   iconColorClass = "text-blue-600",
+  route,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <div
+      onClick={() => navigate(route)}
+      role="button"
+      tabIndex={0} // allows keyboard focus
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          navigate(route);
+        }
+      }}
       className="min-w-85 cursor-pointer bg-white p-4 rounded-xl shadow-md min-h-[120px]
     hover:shadow-lg active:scale-95 transition-transform duration-300 transform hover:-translate-y-1 hover:scale-[1]"
     >

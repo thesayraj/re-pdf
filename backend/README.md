@@ -38,10 +38,15 @@ This is a backend service built using [FastAPI](https://fastapi.tiangolo.com/), 
 
 1. Start the development server:
   ```bash
-  uvicorn main:app --reload
+  uvicorn app.main:app --reload
   ```
 
-2. Open your browser and navigate to:
+2. Run worker
+```bash
+  python -m app.workers.worker
+```
+
+3. Open your browser and navigate to:
   - Swagger UI: `http://127.0.0.1:8000/docs`
   - ReDoc: `http://127.0.0.1:8000/redoc`
 

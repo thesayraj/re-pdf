@@ -4,4 +4,5 @@ export default [
   index("routes/HomePage.tsx"),
   route("privacy", "routes/PrivacyPage.tsx"),
   route("tool", "routes/SampleTool.tsx"),
+  route("pdf-to-image", "routes/PDFToImagePage.tsx"),
 ] satisfies RouteConfig;

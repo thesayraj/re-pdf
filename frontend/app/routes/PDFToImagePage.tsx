@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import FileUploader from "../components/FileUploader";
 import { useJobHandler } from "../hooks/useJobHandler";
+import { useNavigate } from "react-router";
 
 const PDFToImagePage: React.FC = () => {
-  const { isProcessing, handleConvert } = useJobHandler();
+  const { taskState, handleTask } = useJobHandler();
   const [files, setFiles] = useState<File[]>([]);
+  const navigate = useNavigate();
 
   const handleFileUpload = (uploadedFiles: File[] | File) => {
     const arr = Array.isArray(uploadedFiles) ? uploadedFiles : [uploadedFiles];
@@ -13,14 +15,15 @@ const PDFToImagePage: React.FC = () => {
 
   const startConversion = async () => {
     try {
-      const downloadUrl = await handleConvert(files, "pdf-to-image");
-      if (downloadUrl) {
-        const link = document.createElement("a");
-        link.href = downloadUrl;
-        link.download = "output.zip";
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
+      const obj = await handleTask(files, "pdf-to-image");
+      if (obj && obj.downloadUrl) {
+        navigate(`/download/${obj.job_id}`, {
+          state: {
+            downloadUrl: obj.downloadUrl,
+            fileName: obj.fileName,
+            expiresIn: obj.expiresIn,
+          },
+        });
       }
     } catch (err) {
       alert("Conversion failed");
@@ -38,20 +41,17 @@ const PDFToImagePage: React.FC = () => {
           Convert your PDF documents into high-quality images instantly.
         </p>
 
-        <FileUploader
-          onFileSelect={handleFileUpload}
-          acceptedTypes=".pdf"
-        />
+        <FileUploader onFileSelect={handleFileUpload} acceptedTypes=".pdf" />
 
         {files.length > 0 && (
           <div className="mt-6 flex justify-center">
             <button
               onClick={startConversion}
-              disabled={isProcessing}
+              disabled={!!taskState}
               className={`px-6 py-2 rounded-lg font-medium text-white cursor-pointer
-                ${isProcessing ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
+                ${taskState ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
             >
-              {isProcessing ? "Processing..." : "Convert"}
+              {taskState ? taskState : "Convert"}
             </button>
           </div>
         )}

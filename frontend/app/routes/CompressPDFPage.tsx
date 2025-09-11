@@ -3,7 +3,7 @@ import FileUploader from "../components/FileUploader";
 import { useJobHandler } from "../hooks/useJobHandler";
 import { useNavigate } from "react-router";
 
-const PDFToImagePage: React.FC = () => {
+const CompressPDFPage: React.FC = () => {
   const { taskState, handleTask } = useJobHandler();
   const [files, setFiles] = useState<File[]>([]);
   const navigate = useNavigate();
@@ -13,9 +13,9 @@ const PDFToImagePage: React.FC = () => {
     setFiles(arr);
   };
 
-  const startConversion = async () => {
+  const startCompression = async () => {
     try {
-      const obj = await handleTask(files, "pdf-to-image");
+      const obj = await handleTask(files, "compress-pdf");
       if (obj && obj.downloadUrl) {
         navigate(`/download/${obj.jobId}`, {
           state: {
@@ -26,7 +26,7 @@ const PDFToImagePage: React.FC = () => {
         });
       }
     } catch (err) {
-      alert("Conversion failed");
+      alert("Compression failed");
       console.log(err);
     }
   };
@@ -35,10 +35,10 @@ const PDFToImagePage: React.FC = () => {
     <div className="pt-34 min-w-screen min-h-screen flex flex-col items-center justify-start p-8 bg-gray-50">
       <div className="w-full max-w-4xl">
         <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center">
-          PDF to Image
+          Compress PDF
         </h1>
         <p className="text-gray-600 mb-8 text-center">
-          Convert your PDF documents into high-quality images instantly.
+          Compress your PDF documents and reduce size without losing quality.
         </p>
 
         <FileUploader onFileSelect={handleFileUpload} acceptedTypes=".pdf" />
@@ -46,23 +46,23 @@ const PDFToImagePage: React.FC = () => {
         {files.length > 0 && (
           <div className="mt-6 flex justify-center">
             <button
-              onClick={startConversion}
+              onClick={startCompression}
               disabled={!!taskState}
               className={`px-6 py-2 rounded-lg font-medium text-white cursor-pointer
                 ${taskState ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
             >
-              {taskState ? taskState : "Convert"}
+              {taskState ? taskState : "Compress"}
             </button>
           </div>
         )}
       </div>
       <div className="mt-40 space-y-4">
         <h2 className="text-lg font-semibold text-gray-800">
-          How to Convert PDF to Images
+          How to Compress PDF
         </h2>
         <ol className="list-decimal list-inside text-gray-600 space-y-1">
           <li>Upload your PDF file using the uploader above.</li>
-          <li>Click "Convert" to start the conversion process.</li>
+          <li>Click "Compress" to start the compression process.</li>
           <li>Download your images instantly.</li>
         </ol>
 
@@ -75,4 +75,4 @@ const PDFToImagePage: React.FC = () => {
   );
 };
 
-export default PDFToImagePage;
+export default CompressPDFPage;

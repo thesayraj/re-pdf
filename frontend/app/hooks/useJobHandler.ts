@@ -68,7 +68,7 @@ export function useJobHandler() {
         fileName: result.file_name,
         downloadUrl: result.download_url,
         expiresIn: result.expires_in,
-        job_id: job_id,
+        jobId: job_id,
       };
     } catch (err) {
       console.error("Error in jobHandler flow:", err);

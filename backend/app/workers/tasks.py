@@ -1,8 +1,10 @@
 from typing import Dict, List
 from app.services.pdf.pdf_to_image import pdf_to_image
+from app.services.pdf.compress_pdf import compress_pdf
 
 TASKS = {
     "pdf-to-image": pdf_to_image,
+    "compress-pdf": compress_pdf
 }
 
 def run_task(task_name: str, job_id: str, upload_names: List, options: dict) -> Dict:

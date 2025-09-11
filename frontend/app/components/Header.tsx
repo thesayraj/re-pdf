@@ -55,16 +55,16 @@ function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-6 ml-32">
-            <Link to="/merge" className="text-gray-600 hover:text-blue-500">
+            <Link to="/merge-pdf" className="text-gray-600 hover:text-blue-500">
               Merge
             </Link>
-            <Link to="/split" className="text-gray-600 hover:text-blue-500">
+            <Link to="/split-pdf" className="text-gray-600 hover:text-blue-500">
               Split
             </Link>
-            <Link to="/compress" className="text-gray-600 hover:text-blue-500">
+            <Link to="/compress-pdf" className="text-gray-600 hover:text-blue-500">
               Compress
             </Link>
-            <Link to="/convert" className="text-gray-600 hover:text-blue-500">
+            <Link to="/convert-pdf" className="text-gray-600 hover:text-blue-500">
               Convert
             </Link>
           </nav>

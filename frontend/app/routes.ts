@@ -6,4 +6,5 @@ export default [
   route("tool", "routes/SampleTool.tsx"),
   route("pdf-to-image", "routes/PDFToImagePage.tsx"),
   route("download/:jobId", "routes/DownloadPage.tsx"),
+  route("compress-pdf", "routes/CompressPDFPage.tsx"),
 ] satisfies RouteConfig;

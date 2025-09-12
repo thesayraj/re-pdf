@@ -32,7 +32,7 @@ const CompressPDFPage: React.FC = () => {
   };
 
   return (
-    <div className="pt-34 min-w-screen min-h-screen flex flex-col items-center justify-start p-8 bg-gray-50">
+    <div className="pt-34 flex flex-col items-center justify-start p-8 bg-gray-50">
       <div className="w-full max-w-4xl">
         <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center">
           Compress PDF

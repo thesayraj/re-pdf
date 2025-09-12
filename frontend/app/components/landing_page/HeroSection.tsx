@@ -2,7 +2,7 @@ import { FaChevronRight } from "react-icons/fa6";
 
 const HeroSection = () => {
   return (
-    <div className="flex items-center justify-center min-w-screen">
+    <div className="flex items-center justify-center">
       <div className="text-center px-4">
         <h1 className="text-4xl md:text-4xl font-bold text-black mb-4">
           We help with your PDF tasks

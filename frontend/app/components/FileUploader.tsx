@@ -76,7 +76,9 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    const droppedFiles = e.dataTransfer.files ? Array.from(e.dataTransfer.files) : [];
+    const droppedFiles = e.dataTransfer.files
+      ? Array.from(e.dataTransfer.files)
+      : [];
     const validFiles = validateFiles(droppedFiles);
     if (validFiles.length > 0) addFiles(validFiles);
   };
@@ -86,69 +88,71 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   };
 
   return (
-    <div
-      ref={containerRef}
-      className={`w-full p-10 border-2 border-dashed rounded-xl bg-white shadow-md transition
+    <div className="w-full p-10 flex justify-center">
+      <div
+        ref={containerRef}
+        className={`w-4xl p-10 border-2 border-dashed rounded-xl bg-white shadow-md transition
         ${isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"}`}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-      onClick={() => inputRef.current?.click()}
-    >
-      {files.length === 0 ? (
-        <div className="cursor-pointer flex flex-col items-center space-y-3">
-          <Upload className="w-12 h-12 text-blue-500" />
-          <p className="text-gray-700 font-medium">
-            Click or drag {multiple ? "files" : "a file"} anywhere to upload
-          </p>
-        </div>
-      ) : (
-        <div className="space-y-2">
-          {files.map((file, index) => (
-            <div
-              key={`${file.name}-${file.size}-${index}`}
-              className="flex items-center justify-between p-3 border rounded-lg bg-gray-50"
-            >
-              <div className="flex items-center space-x-2">
-                <FileIcon className="w-5 h-5 text-blue-600" />
-                <span className="text-gray-800">{file.name}</span>
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onClick={() => inputRef.current?.click()}
+      >
+        {files.length === 0 ? (
+          <div className="cursor-pointer flex flex-col items-center space-y-3">
+            <Upload className="w-12 h-12 text-blue-500" />
+            <p className="text-gray-700 font-medium">
+              Click or drag {multiple ? "files" : "a file"} anywhere to upload
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {files.map((file, index) => (
+              <div
+                key={`${file.name}-${file.size}-${index}`}
+                className="flex items-center justify-between p-3 border rounded-lg bg-gray-50"
+              >
+                <div className="flex items-center space-x-2">
+                  <FileIcon className="w-5 h-5 text-blue-600" />
+                  <span className="text-gray-800">{file.name}</span>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    removeFile(index);
+                  }}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  <X className="w-5 h-5 cursor-pointer" />
+                </button>
               </div>
+            ))}
+            {multiple && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  removeFile(index);
+                  inputRef.current?.click();
                 }}
-                className="text-red-500 hover:text-red-700"
+                className="mt-2 text-blue-600 hover:underline"
               >
-                <X className="w-5 h-5 cursor-pointer" />
+                + Add more files
               </button>
-            </div>
-          ))}
-          {multiple && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                inputRef.current?.click();
-              }}
-              className="mt-2 text-blue-600 hover:underline"
-            >
-              + Add more files
-            </button>
-          )}
-        </div>
-      )}
+            )}
+          </div>
+        )}
 
-      {error && <p className="text-red-500 mt-2">{error}</p>}
+        {error && <p className="text-red-500 mt-2">{error}</p>}
 
-      {/* Hidden input */}
-      <input
-        ref={inputRef}
-        type="file"
-        accept={acceptedTypes}
-        className="hidden"
-        multiple={multiple}
-        onChange={handleFileChange}
-      />
+        {/* Hidden input */}
+        <input
+          ref={inputRef}
+          type="file"
+          accept={acceptedTypes}
+          className="hidden"
+          multiple={multiple}
+          onChange={handleFileChange}
+        />
+      </div>
     </div>
   );
 };

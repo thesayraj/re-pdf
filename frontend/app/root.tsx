@@ -14,6 +14,7 @@ import Footer from "./components/Footer";
 
 import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
+import { ZoomProvider } from "./contexts/ZoomContext";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -51,7 +52,9 @@ export default function App() {
   return (
     <div>
       <Header />
-      <Outlet />
+      <ZoomProvider>
+        <Outlet />
+      </ZoomProvider>
       <Footer />
     </div>
   );

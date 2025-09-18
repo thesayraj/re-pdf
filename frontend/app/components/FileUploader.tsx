@@ -1,158 +1,98 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
-import { Upload, File as FileIcon, X } from "lucide-react";
-
-interface FileUploaderProps {
-  onFileSelect: (files: File[]) => void;
-  acceptedTypes?: string; // e.g. ".pdf,.jpg"
-  multiple?: boolean;
-  maxFileSizeMB?: number;
-}
+import React, { useRef, useState } from "react";
+import { UploadIcon, PlusIcon } from "lucide-react";
+import { FileUploaderProps } from "../types/file";
 
 const FileUploader: React.FC<FileUploaderProps> = ({
   onFileSelect,
-  acceptedTypes = ".pdf",
+  acceptedTypes,
   multiple = false,
-  maxFileSizeMB = 60,
+  variant = "full",
+  maxFileSizeMB = 40,
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [files, setFiles] = useState<File[]>([]);
-  const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Notify parent whenever files change
-  useEffect(() => {
-    onFileSelect(files);
-  }, [files, onFileSelect]);
-
-  const validateFiles = useCallback(
-    (selectedFiles: File[]) => {
-      const valid: File[] = [];
-      for (const file of selectedFiles) {
-        if (file.size > maxFileSizeMB * 1024 * 1024) {
-          setError(`${file.name} exceeds ${maxFileSizeMB}MB`);
-          continue;
-        }
-        if (
-          acceptedTypes &&
-          !acceptedTypes
-            .split(",")
-            .some((ext) => file.name.toLowerCase().endsWith(ext.trim()))
-        ) {
-          setError(`${file.name} has invalid file type`);
-          continue;
-        }
-        valid.push(file);
-      }
-      return valid;
-    },
-    [maxFileSizeMB, acceptedTypes]
-  );
-
-  const addFiles = (newFiles: File[]) => {
-    setFiles((prev) => {
-      const updated = multiple ? [...prev, ...newFiles] : [newFiles[0]];
+  const handleFiles = (newFiles: File[]) => {
+    let validFiles = validateFiles(newFiles);
+    if (validFiles.length) {
       setError(null);
-      return updated;
-    });
+      validFiles = multiple ? validFiles : [validFiles[0]];
+      onFileSelect(validFiles);
 
-    // Reset input for single-file mode
-    if (!multiple && inputRef.current) inputRef.current.value = "";
+      if (!multiple && inputRef.current) inputRef.current.value = "";
+    }
+  };
+
+  const validateFiles = (selectedFiles: File[]) => {
+    const valid: File[] = [];
+    for (const file of selectedFiles) {
+      if (file.size > maxFileSizeMB * 1024 * 1024) {
+        setError(`${file.name} exceeds ${maxFileSizeMB}MB`);
+        continue;
+      }
+      if (
+        acceptedTypes &&
+        !acceptedTypes
+          .split(",")
+          .some((ext) => file.name.toLowerCase().endsWith(ext.trim()))
+      ) {
+        setError(`${file.name} has invalid file type`);
+        continue;
+      }
+      valid.push(file);
+    }
+    return valid;
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFiles = e.target.files ? Array.from(e.target.files) : [];
-    const validFiles = validateFiles(selectedFiles);
-    if (validFiles.length > 0) addFiles(validFiles);
+    if (!e.target.files) return;
+    handleFiles(Array.from(e.target.files));
   };
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
-    setIsDragging(true);
+    handleFiles(Array.from(e.dataTransfer.files));
   };
 
-  const handleDragLeave = () => setIsDragging(false);
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragging(false);
-    const droppedFiles = e.dataTransfer.files
-      ? Array.from(e.dataTransfer.files)
-      : [];
-    const validFiles = validateFiles(droppedFiles);
-    if (validFiles.length > 0) addFiles(validFiles);
-  };
-
-  const removeFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
+  const triggerBrowse = () => {
+    inputRef.current?.click();
   };
 
   return (
-    <div className="w-full p-10 flex justify-center">
-      <div
-        ref={containerRef}
-        className={`w-4xl p-10 border-2 border-dashed rounded-xl bg-white shadow-md transition
-        ${isDragging ? "border-blue-500 bg-blue-50" : "border-gray-300"}`}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        onClick={() => inputRef.current?.click()}
-      >
-        {files.length === 0 ? (
-          <div className="cursor-pointer flex flex-col items-center space-y-3">
-            <Upload className="w-12 h-12 text-blue-500" />
-            <p className="text-gray-700 font-medium">
-              Click or drag {multiple ? "files" : "a file"} anywhere to upload
-            </p>
-          </div>
-        ) : (
-          <div className="space-y-2">
-            {files.map((file, index) => (
-              <div
-                key={`${file.name}-${file.size}-${index}`}
-                className="flex items-center justify-between p-3 border rounded-lg bg-gray-50"
-              >
-                <div className="flex items-center space-x-2">
-                  <FileIcon className="w-5 h-5 text-blue-600" />
-                  <span className="text-gray-800">{file.name}</span>
-                </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    removeFile(index);
-                  }}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  <X className="w-5 h-5 cursor-pointer" />
-                </button>
-              </div>
-            ))}
-            {multiple && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  inputRef.current?.click();
-                }}
-                className="mt-2 text-blue-600 hover:underline"
-              >
-                + Add more files
-              </button>
-            )}
-          </div>
-        )}
+    <div
+      className={`cursor-pointer ${
+        variant === "full"
+          ? "border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500"
+          : "border border-gray-300 text-blue-600 text-sm px-6 py-2 rounded-lg bg-transparent hover:bg-blue-50 hover:border-blue-400"
+      }`}
+      onClick={triggerBrowse}
+      onDrop={handleDrop}
+      onDragOver={(e) => e.preventDefault()}
+    >
+      <input
+        type="file"
+        ref={inputRef}
+        multiple={multiple}
+        accept={acceptedTypes}
+        onChange={handleFileChange}
+        className="hidden"
+      />
 
-        {error && <p className="text-red-500 mt-2">{error}</p>}
-
-        {/* Hidden input */}
-        <input
-          ref={inputRef}
-          type="file"
-          accept={acceptedTypes}
-          className="hidden"
-          multiple={multiple}
-          onChange={handleFileChange}
-        />
-      </div>
+      {variant === "full" ? (
+        <>
+          <UploadIcon className="mx-auto mb-5 w-15 h-15 text-blue-500" />
+          <p className="text-gray-500">
+            Drag and drop files here, or{" "}
+            <span className="text-blue-600">browse</span>
+          </p>
+          {error && <p className="text-red-500 mt-2">{error}</p>}
+        </>
+      ) : (
+        <span>
+          <PlusIcon className="mr-2 text-blue-500 inline" size={15} />
+          <span>Add More Files</span>
+        </span>
+      )}
     </div>
   );
 };

@@ -1,10 +1,11 @@
 import React from "react";
 import { Page } from "../../utils/pdfComponents";
 import { PDFDocumentProxy } from "pdfjs-dist";
+import { ZoomInIcon, Trash2Icon as TrashIcon } from "lucide-react";
 
 export interface PageData {
   id: string;
-  file_name: string;
+  fileName: string;
   pageNumber: number;
 }
 
@@ -37,15 +38,15 @@ const PreviewCard: React.FC<PreviewCardProps> = ({ pdf, page, onDelete }) => {
       <div className="absolute top-1 right-1 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
         <button
           onClick={handleZoom}
-          className="bg-green-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold hover:bg-green-600"
+          className="flex items-center justify-center text-xs font-bold"
         >
-          Z
+          <ZoomInIcon className="w-6 h-6 text-green-500 hover:text-green-600" />
         </button>
         <button
           onClick={onDelete}
-          className="bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold hover:bg-red-600"
+          className="flex items-center justify-center text-xs font-bold"
         >
-          X
+          <TrashIcon className="w-6 h-6 text-red-500 hover:text-red-600" />
         </button>
       </div>
     </div>

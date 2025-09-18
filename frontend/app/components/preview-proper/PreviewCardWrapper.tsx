@@ -27,13 +27,13 @@ const PreviewCardWrapper: React.FC<PreviewCardWrapperProps> = ({
   // Update visibility but debounce rapid changes
   const debouncedSetVisible = useDebounce((val: boolean) => {
     setVisible(val);
-  }, 200);
+  }, 400);
 
   useEffect(() => {
     debouncedSetVisible(isVisible);
   }, [isVisible]);
 
-  const debouncedDelete = useDebounce(() => onDelete(page.id), 300); // 300 ms delay
+  const debouncedDelete = useDebounce(() => onDelete(page.id), 400); // 400 ms delay
 
   return (
     <div ref={containerRef} className="w-full h-full">

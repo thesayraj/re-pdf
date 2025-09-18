@@ -3,18 +3,20 @@ import { PageData } from "./PreviewCard";
 import { loadPdfJs, getPdfJs } from "../../utils/pdfService";
 import { PDFDocumentProxy } from "pdfjs-dist";
 import PreviewCardWrapper from "./PreviewCardWrapper";
+import { getUniqueFileName } from "../../utils/helper";
 
 interface PreviewAreaProps {
   files: File[];
+  viewType: "file" | "page";
 }
 
-const PreviewArea: React.FC<PreviewAreaProps> = ({ files }) => {
+const PreviewArea: React.FC<PreviewAreaProps> = ({ files, viewType }) => {
   console.log("preview-proper PreviewArea ", files);
   const [pages, setPages] = useState<PageData[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pdfJsLoaded, setPdfJsLoaded] = useState(false);
-  const [pdf, setPdf] = useState<PDFDocumentProxy>();
+  const [pdfs, setPdfs] = useState<Record<string, PDFDocumentProxy>>({});
 
   useEffect(() => {
     loadPdfJs().then(() => {
@@ -38,18 +40,23 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({ files }) => {
         const arrayBuffer = await file.arrayBuffer();
         const pdf = await pdfjs.getDocument(arrayBuffer).promise;
         const numPages = pdf.numPages;
-        setPdf(pdf);
+        const pagesToShow = viewType == "file" ? 1 : numPages;
 
-        for (let i = 0; i < numPages; i++) {
+        const fileId = getUniqueFileName(file);
+        setPdfs((prev_pdfs) => ({
+          ...prev_pdfs,
+          [fileId]: pdf,
+        }));
+
+        for (let i = 0; i < pagesToShow; i++) {
           const pageNum = i + 1;
           newPages.push({
-            id: `${file.name}-page-${pageNum}`,
-            file_name: `${file.name} - Page ${pageNum}`,
+            id: `${fileId}-page-${pageNum}`,
+            fileName: fileId,
             pageNumber: pageNum,
           });
         }
       }
-      console.log("newPages: ", newPages);
 
       setPages(newPages);
       setLoading(false);
@@ -57,7 +64,16 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({ files }) => {
   };
 
   const handleDeletePage = (id: string) => {
-    setPages((prev) => prev.filter((page) => page.id !== id));
+    setPages((prev) => {
+      const toDelete = prev.find((p) => p.id === id);
+      if (viewType === "file" && toDelete?.fileName) {
+        setPdfs((prev_pdfs) => {
+          const { [toDelete.fileName]: _, ...rest } = prev_pdfs;
+          return rest;
+        });
+      }
+      return prev.filter((p) => p.id !== id);
+    });
   };
 
   if (!pdfJsLoaded) return <p>Loading PDF renderer...</p>;
@@ -76,12 +92,11 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({ files }) => {
       {error && (
         <p className="text-center text-red-500 col-span-full">{error}</p>
       )}
-
-      {pdf &&
+      {pdfs &&
         pages.map((page) => (
           <PreviewCardWrapper
             key={page.id}
-            pdf={pdf}
+            pdf={pdfs[page.fileName]}
             page={page}
             onDelete={handleDeletePage}
           />

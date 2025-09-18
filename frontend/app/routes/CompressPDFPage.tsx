@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import FileUploader from "../components/FileUploader";
 import { useJobHandler } from "../hooks/useJobHandler";
 import { useNavigate } from "react-router";
+import PreviewArea from "../components/preview-proper/PreviewArea";
 
 const CompressPDFPage: React.FC = () => {
   const { taskState, handleTask } = useJobHandler();
@@ -32,8 +33,8 @@ const CompressPDFPage: React.FC = () => {
   };
 
   return (
-    <div className="pt-34 flex flex-col items-center justify-start p-8 bg-gray-50">
-      <div className="w-full max-w-4xl">
+    <div className="pt-34 flex flex-col items-center p-8 bg-gray-50">
+      <div className="w-full">
         <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center">
           Compress PDF
         </h1>
@@ -41,7 +42,15 @@ const CompressPDFPage: React.FC = () => {
           Compress your PDF documents and reduce size without losing quality.
         </p>
 
-        <FileUploader onFileSelect={handleFileUpload} acceptedTypes=".pdf" />
+        {files.length === 0 ? (
+          <FileUploader
+            onFileSelect={handleFileUpload}
+            acceptedTypes=".pdf,.jpg,.png"
+            multiple
+          />
+        ) : (
+          <PreviewArea files={files} viewType="file" />
+        )}
 
         {files.length > 0 && (
           <div className="mt-6 flex justify-center">

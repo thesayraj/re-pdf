@@ -1,153 +1,108 @@
-import React, { useCallback, useEffect, useState } from "react";
-import PreviewCard, { PageData } from "./PreviewCard";
-import { loadPdfJs, getPdfJs } from "../../utils/pdfService";
+import React, { useEffect, useState } from "react";
+import PreviewCardWrapper from "./PreviewCardWrapper";
+import FileUploader from "../FileUploader";
+import { PageData, PreviewAreaProps } from "../../types/preview";
 
-
-interface PreviewAreaProps {
-  files?: File[];
-}
-
-const PreviewArea: React.FC<PreviewAreaProps> = ({ files }) => {
+const PreviewArea: React.FC<PreviewAreaProps> = ({
+  items,
+  viewType,
+  onDeleteFile,
+  onAddFiles,
+}) => {
   const [pages, setPages] = useState<PageData[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [pdfJsLoaded, setPdfJsLoaded] = useState(false);
-  const [processedFiles, setProcessedFiles] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    loadPdfJs().then(() => {
-      setPdfJsLoaded(true);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (files && files.length > 0 && pdfJsLoaded) {
-      processFiles(files);
-    }
-  }, [files, pdfJsLoaded]);
-
-  const processFiles = useCallback(
-    async (files: File[]) => {
-      console.log("processFiles");
+    const processItems = async () => {
       setLoading(true);
-      setError(null);
+      const newPages: PageData[] = [];
 
       try {
-        const newPages: PageData[] = [];
-        const newProcessedFiles = new Set(processedFiles);
-
-        for (const file of files) {
-          const fileKey = `${file.name}-${file.lastModified}`;
-
-          if (processedFiles.has(fileKey)) {
-            console.log(`Skipping already processed file: ${file.name}`);
-            continue;
-          }
-
-          if (file.type === "application/pdf") {
-            const arrayBuffer = await file.arrayBuffer();
-            const pdfjs = getPdfJs();
-            const pdf = await pdfjs.getDocument(arrayBuffer).promise;
-
-            const renderPage = async (page: any, scale = 0.4) => {
-              const viewport = page.getViewport({ scale });
-
-              const canvas = new OffscreenCanvas(
-                viewport.width,
-                viewport.height
-              );
-              const ctx = canvas.getContext("2d")!;
-              await page.render({ canvasContext: ctx, viewport }).promise;
-
-              const blob = await canvas.convertToBlob({ type: "image/png" });
-              return blob;
-            };
-
-            const scale = pdf.numPages > 50 ? 0.2 : 0.4;
-            const CONCURRENCY_LIMIT = 4;
-            const queue = Array.from({ length: pdf.numPages }, (_, i) => i + 1);
-
-            const processNext = async () => {
-              if (queue.length === 0) return;
-              const pageNum = queue.shift();
-              const page = await pdf.getPage(pageNum);
-              const blob = await renderPage(page, scale);
-              const thumbnailURL = URL.createObjectURL(blob);
-
+        for (const item of items) {
+          if (item.type === "pdf" && item.pdf) {
+            const numPages = item.pdf.numPages;
+            const pagesToShow = viewType === "file" ? 1 : numPages;
+            for (let i = 0; i < pagesToShow; i++) {
               newPages.push({
-                id: `${file.name}-page-${pageNum}`,
-                file,
-                type: "pdf",
-                name: `${file.name} - Page ${pageNum}`,
-                pageNumber: pageNum,
-                thumbnail: thumbnailURL,
+                id: `${item.id}-page-${i + 1}`,
+                fileName: item.id,
+                pageNumber: i + 1,
               });
-
-              await processNext();
-            };
-
-            await Promise.all(
-              Array(CONCURRENCY_LIMIT)
-                .fill(null)
-                .map(() => processNext())
-            );
-          } else if (file.type.startsWith("image/")) {
-            const imgURL = URL.createObjectURL(file);
+            }
+          } else if (item.type === "image") {
             newPages.push({
-              id: file.name,
-              file,
-              type: "image",
-              name: file.name,
-              thumbnail: imgURL,
+              id: `${item.id}-page-1`,
+              fileName: item.id,
+              pageNumber: 1,
             });
-          } else {
-            console.warn(`Unsupported file type: ${file.type}`);
           }
-
-          newProcessedFiles.add(fileKey);
         }
-
-        setPages((prev) => [...prev, ...newPages]);
-        setProcessedFiles(newProcessedFiles);
-        console.log("processFiles Done");
+        setPages(newPages);
+        setError(null);
       } catch (err) {
-        console.error(err);
-        setError("Failed to extract pages.");
+        console.error("Error processing items", err);
+        setError("Failed to process files");
       } finally {
         setLoading(false);
       }
-    },
-    [processedFiles]
-  );
+    };
+
+    if (items.length > 0) {
+      processItems();
+    } else {
+      setPages([]);
+    }
+  }, [items, viewType]);
 
   const handleDeletePage = (id: string) => {
-    setPages((prev) => prev.filter((page) => page.id !== id));
+    setPages((prev) => prev.filter((p) => p.id !== id));
+    if (viewType === "file") {
+      const deleted = items.find((it) => id.startsWith(it.id));
+      if (deleted && onDeleteFile) onDeleteFile(deleted.id);
+    }
   };
 
-  if (!pdfJsLoaded) return <p>Loading PDF renderer...</p>;
-
   return (
-    <div
-      className="bg-blue-50 rounded-2xl w-full
-        grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4
-        justify-items-center p-5"
-    >
-      {loading && (
-        <p className="text-center text-blue-500 col-span-full">
-          Loading pages...
-        </p>
-      )}
-      {error && (
-        <p className="text-center text-red-500 col-span-full">{error}</p>
-      )}
+    <div className="w-full">
+      <div className="flex justify-center mb-4">
+        {onAddFiles && (
+          <FileUploader
+            onFileSelect={onAddFiles}
+            acceptedTypes=".pdf,.jpg,.png"
+            multiple
+            variant="compact"
+          />
+        )}
+      </div>
 
-      {pages.map((page) => (
-        <PreviewCard
-          key={page.id}
-          page={page}
-          onDelete={() => handleDeletePage(page.id)}
-        />
-      ))}
+      {/* Grid */}
+      <div
+        className="bg-blue-50 rounded-2xl w-full
+          grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4
+          justify-center justify-items-center p-5"
+      >
+        {loading && (
+          <p className="text-center text-blue-500 col-span-full">
+            Loading pages...
+          </p>
+        )}
+        {error && (
+          <p className="text-center text-red-500 col-span-full">{error}</p>
+        )}
+        {pages.map((page) => {
+          const file = items.find((f) => f.id === page.fileName);
+          return (
+            <PreviewCardWrapper
+              key={page.id}
+              pdf={file?.pdf}
+              imageFile={file?.type === "image" ? file.file : undefined}
+              page={page}
+              onDelete={handleDeletePage}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };

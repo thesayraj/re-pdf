@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { loadPdfJs, getPdfJs } from "../utils/pdfService";
-import { InputFile } from "../types/types";
+import { InputFile } from "../types/preview";
 import { getUniqueFileName } from "../utils/helper";
 
 export function useFileLoader() {
   const [items, setItems] = useState<InputFile[]>([]);
 
   const addFiles = async (files: File[]) => {
-    console.log("Addfiles..")
     loadPdfJs().then(async () => {
       const pdfjs = getPdfJs();
       const newItems: InputFile[] = [];

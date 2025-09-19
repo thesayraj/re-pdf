@@ -2,8 +2,8 @@ import React from "react";
 import FileUploader from "../components/FileUploader";
 import { useJobHandler } from "../hooks/useJobHandler";
 import { useNavigate } from "react-router";
-import PreviewArea, { InputFile } from "../components/preview-proper/PreviewArea";
 import { useFileLoader } from "../hooks/useFileLoader";
+import PreviewArea from "../components/preview/PreviewArea";
 
 const CompressPDFPage: React.FC = () => {
   const { taskState, handleTask } = useJobHandler();
@@ -31,18 +31,23 @@ const CompressPDFPage: React.FC = () => {
   return (
     <div className="pt-34 flex flex-col items-center p-8 bg-gray-50">
       <div className="w-full">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center">Compress PDF</h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center">
+          Compress PDF
+        </h1>
         <p className="text-gray-600 mb-8 text-center">
           Compress your PDF documents and reduce size without losing quality.
         </p>
 
         {items.length === 0 ? (
-          <FileUploader onFileSelect={addFiles} acceptedTypes=".pdf,.jpg,.png" multiple />
+          <FileUploader onFileSelect={addFiles} acceptedTypes=".pdf" />
         ) : (
           <PreviewArea
             items={items}
             viewType="page"
-            onDeleteFile={(id) => setItems((prev) => prev.filter((f) => f.id !== id))}
+            onDeleteFile={(id) =>
+              setItems((prev) => prev.filter((f) => f.id !== id))
+            }
+            onAddFiles={addFiles}
           />
         )}
 

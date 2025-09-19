@@ -1,13 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { PDFDocumentProxy, RenderTask } from "pdfjs-dist";
-import PreviewCard, { PageData } from "./PreviewCard";
+import { RenderTask } from "pdfjs-dist";
+import PreviewCard from "./PreviewCard";
+import { PreviewCardWrapperProps } from "../../types/preview";
 
-interface PreviewCardWrapperProps {
-  pdf?: PDFDocumentProxy;
-  imageFile?: File;
-  page: PageData;
-  onDelete: (id: string) => void;
-}
 
 const PreviewCardWrapper: React.FC<PreviewCardWrapperProps> = ({
   pdf,
@@ -37,7 +32,6 @@ const PreviewCardWrapper: React.FC<PreviewCardWrapperProps> = ({
 
         // cancel any previous render task
         if (renderTaskRef.current) {
-          console.log("renderTaskRef.current ..");
           renderTaskRef.current.cancel();
         }
 

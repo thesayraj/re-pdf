@@ -1,29 +1,18 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import FileUploader from "../components/FileUploader";
 import { useJobHandler } from "../hooks/useJobHandler";
 import { useNavigate } from "react-router";
-import PreviewArea from "../components/preview-proper/PreviewArea";
+import PreviewArea, { InputFile } from "../components/preview-proper/PreviewArea";
 import { useFileLoader } from "../hooks/useFileLoader";
-import { loadPdfJs } from "../utils/pdfService";
 
 const CompressPDFPage: React.FC = () => {
   const { taskState, handleTask } = useJobHandler();
-  const { items, setItems, addFiles } = useFileLoader();
-  const [pdfJsLoaded, setPdfJsLoaded] = useState(false);
+  const { items, addFiles, setItems } = useFileLoader();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    loadPdfJs().then(() => {
-      setPdfJsLoaded(true);
-    });
-  }, []);
 
   const startCompression = async () => {
     try {
-      const obj = await handleTask(
-        items.map((f) => f.file),
-        "compress-pdf"
-      );
+      const obj = await handleTask(items, "compress-pdf");
       if (obj && obj.downloadUrl) {
         navigate(`/download/${obj.jobId}`, {
           state: {
@@ -35,35 +24,25 @@ const CompressPDFPage: React.FC = () => {
       }
     } catch (err) {
       alert("Compression failed");
-      console.error(err);
+      console.log(err);
     }
   };
-
-  if (!pdfJsLoaded) return <p>Loading PDF renderer..</p>;
 
   return (
     <div className="pt-34 flex flex-col items-center p-8 bg-gray-50">
       <div className="w-full">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center">
-          Compress PDF
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center">Compress PDF</h1>
         <p className="text-gray-600 mb-8 text-center">
           Compress your PDF documents and reduce size without losing quality.
         </p>
 
         {items.length === 0 ? (
-          <FileUploader
-            onFileSelect={addFiles}
-            acceptedTypes=".pdf,.jpg,.png"
-            multiple
-          />
+          <FileUploader onFileSelect={addFiles} acceptedTypes=".pdf,.jpg,.png" multiple />
         ) : (
           <PreviewArea
             items={items}
-            viewType="file"
-            onDeleteFile={(id) =>
-              setItems((prev) => prev.filter((f) => f.id !== id))
-            }
+            viewType="page"
+            onDeleteFile={(id) => setItems((prev) => prev.filter((f) => f.id !== id))}
           />
         )}
 

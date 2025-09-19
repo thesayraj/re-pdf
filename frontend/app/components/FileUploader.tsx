@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useCallback } from "react";
+import React, { useRef, useState, useCallback } from "react";
 import { Upload, File as FileIcon, X } from "lucide-react";
 
 interface FileUploaderProps {
@@ -19,11 +19,6 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   const [files, setFiles] = useState<File[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Notify parent whenever files change
-  useEffect(() => {
-    onFileSelect(files);
-  }, [files, onFileSelect]);
 
   const validateFiles = useCallback(
     (selectedFiles: File[]) => {
@@ -53,6 +48,9 @@ const FileUploader: React.FC<FileUploaderProps> = ({
     setFiles((prev) => {
       const updated = multiple ? [...prev, ...newFiles] : [newFiles[0]];
       setError(null);
+
+      console.log("will call onFileSelect");
+      onFileSelect(newFiles);
       return updated;
     });
 
@@ -63,7 +61,10 @@ const FileUploader: React.FC<FileUploaderProps> = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files ? Array.from(e.target.files) : [];
     const validFiles = validateFiles(selectedFiles);
-    if (validFiles.length > 0) addFiles(validFiles);
+    if (validFiles.length > 0) {
+      onFileSelect(validFiles);
+      // addFiles(validFiles);
+    }
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -80,7 +81,10 @@ const FileUploader: React.FC<FileUploaderProps> = ({
       ? Array.from(e.dataTransfer.files)
       : [];
     const validFiles = validateFiles(droppedFiles);
-    if (validFiles.length > 0) addFiles(validFiles);
+    if (validFiles.length > 0) {
+      // addFiles(validFiles);
+      onFileSelect(validFiles);
+    }
   };
 
   const removeFile = (index: number) => {

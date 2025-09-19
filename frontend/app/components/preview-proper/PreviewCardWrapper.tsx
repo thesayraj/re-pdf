@@ -1,18 +1,20 @@
 import { PDFDocumentProxy } from "pdfjs-dist";
-import PreviewCard, { PageData } from "./PreviewCard";
+import PreviewCard from "./PreviewCard";
 import { useInView } from "../../hooks/useInView";
 import useDebounce from "../../hooks/useDebounce";
 import { useEffect, useState } from "react";
 
 interface PreviewCardWrapperProps {
   pdf?: PDFDocumentProxy;
-  page: PageData;
-  onDelete: (id: string) => void;
+  pageNumber?: number;
+  imageFile?: File;
+  onDelete: () => void;
 }
 
 const PreviewCardWrapper: React.FC<PreviewCardWrapperProps> = ({
   pdf,
-  page,
+  pageNumber,
+  imageFile,
   onDelete,
 }) => {
   const { containerRef, isVisible } = useInView({
@@ -21,27 +23,21 @@ const PreviewCardWrapper: React.FC<PreviewCardWrapperProps> = ({
     threshold: 0.6,
   });
 
-  // Local state to track visibility with debounce
   const [visible, setVisible] = useState(isVisible);
-
-  // Update visibility but debounce rapid changes
-  const debouncedSetVisible = useDebounce((val: boolean) => {
-    setVisible(val);
-  }, 400);
+  const debouncedSetVisible = useDebounce((val: boolean) => setVisible(val), 400);
 
   useEffect(() => {
     debouncedSetVisible(isVisible);
   }, [isVisible]);
-
-  const debouncedDelete = useDebounce(() => onDelete(page.id), 400); // 400 ms delay
 
   return (
     <div ref={containerRef} className="w-full h-full">
       {visible ? (
         <PreviewCard
           pdf={pdf}
-          page={page.pageNumber}
-          onDelete={debouncedDelete}
+          pageNumber={pageNumber}
+          imageFile={imageFile}
+          onDelete={onDelete}
         />
       ) : (
         <div className="relative h-55 w-40 rounded-lg overflow-hidden shadow-sm bg-white border border-gray-200"></div>

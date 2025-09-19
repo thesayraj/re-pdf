@@ -1,22 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import FileUploader from "../components/FileUploader";
 import { useJobHandler } from "../hooks/useJobHandler";
 import { useNavigate } from "react-router";
 import PreviewArea from "../components/preview-proper/PreviewArea";
+import { useFileLoader } from "../hooks/useFileLoader";
+import { loadPdfJs } from "../utils/pdfService";
 
 const CompressPDFPage: React.FC = () => {
   const { taskState, handleTask } = useJobHandler();
-  const [files, setFiles] = useState<File[]>([]);
+  const { items, setItems, addFiles } = useFileLoader();
+  const [pdfJsLoaded, setPdfJsLoaded] = useState(false);
   const navigate = useNavigate();
 
-  const handleFileUpload = (uploadedFiles: File[] | File) => {
-    const arr = Array.isArray(uploadedFiles) ? uploadedFiles : [uploadedFiles];
-    setFiles(arr);
-  };
+  useEffect(() => {
+    loadPdfJs().then(() => {
+      setPdfJsLoaded(true);
+    });
+  }, []);
 
   const startCompression = async () => {
     try {
-      const obj = await handleTask(files, "compress-pdf");
+      const obj = await handleTask(
+        items.map((f) => f.file),
+        "compress-pdf"
+      );
       if (obj && obj.downloadUrl) {
         navigate(`/download/${obj.jobId}`, {
           state: {
@@ -28,9 +35,11 @@ const CompressPDFPage: React.FC = () => {
       }
     } catch (err) {
       alert("Compression failed");
-      console.log(err);
+      console.error(err);
     }
   };
+
+  if (!pdfJsLoaded) return <p>Loading PDF renderer..</p>;
 
   return (
     <div className="pt-34 flex flex-col items-center p-8 bg-gray-50">
@@ -42,17 +51,23 @@ const CompressPDFPage: React.FC = () => {
           Compress your PDF documents and reduce size without losing quality.
         </p>
 
-        {files.length === 0 ? (
+        {items.length === 0 ? (
           <FileUploader
-            onFileSelect={handleFileUpload}
+            onFileSelect={addFiles}
             acceptedTypes=".pdf,.jpg,.png"
             multiple
           />
         ) : (
-          <PreviewArea files={files} viewType="file" />
+          <PreviewArea
+            items={items}
+            viewType="file"
+            onDeleteFile={(id) =>
+              setItems((prev) => prev.filter((f) => f.id !== id))
+            }
+          />
         )}
 
-        {files.length > 0 && (
+        {items.length > 0 && (
           <div className="mt-6 flex justify-center">
             <button
               onClick={startCompression}

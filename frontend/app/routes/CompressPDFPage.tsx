@@ -49,7 +49,6 @@ const CompressPDFPage: React.FC = () => {
             onDeleteFile={(id) =>
               setItems((prev) => prev.filter((f) => f.id !== id))
             }
-            onAddFiles={addFiles}
           />
         )}
 

@@ -7,6 +7,7 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
   items,
   viewType,
   acceptedTypes,
+  canAddMoreFiles,
   onDeleteFile,
   onAddFiles,
 }) => {
@@ -69,7 +70,7 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
     <div className="w-full">
       {/* Add More Files button */}
       <div className="flex justify-center mb-4">
-        {onAddFiles && (
+        {canAddMoreFiles && onAddFiles && (
           <FileUploader
             onFileSelect={onAddFiles}
             acceptedTypes={acceptedTypes}

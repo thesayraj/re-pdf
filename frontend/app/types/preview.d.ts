@@ -6,13 +6,24 @@ export interface PageData {
   pageNumber: number;
 }
 
-export interface PreviewAreaProps {
+type BasePreviewAreaProps = {
   items: InputFile[];
   viewType: "file" | "page";
   acceptedTypes: string;
   onDeleteFile?: (id: string) => void;
-  onAddFiles?: (files: File[]) => void;
-}
+};
+
+type WithAddFiles = BasePreviewAreaProps & {
+  canAddMoreFiles: true;
+  onAddFiles: (files: File[]) => void; // required
+};
+
+type WithoutAddFiles = BasePreviewAreaProps & {
+  canAddMoreFiles?: false; // default false or undefined
+  onAddFiles?: never; // explicitly disallowed
+};
+
+export type PreviewAreaProps = WithAddFiles | WithoutAddFiles;
 
 export interface PreviewCardWrapperProps {
   file: InputFile;

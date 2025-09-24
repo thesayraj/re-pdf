@@ -57,7 +57,7 @@ function DownloadPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen min-w-screen flex flex-col items-center justify-center h-screen text-center px-4">
+      <div className="flex flex-col items-center justify-center h-screen text-center px-4">
         <div className="w-16 h-16 border-4 border-gray-300 border-t-green-500 rounded-full animate-spin"></div>
         <p className="mt-4 text-gray-700">Loading download info...</p>
       </div>
@@ -66,7 +66,7 @@ function DownloadPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen min-w-screen flex flex-col items-center justify-center h-screen text-center px-4">
+      <div className="flex flex-col items-center justify-center h-screen text-center px-4">
         <h2 className="text-2xl font-semibold text-red-600">Error</h2>
         <p className="mt-2 text-gray-700">{error}</p>
       </div>
@@ -74,7 +74,7 @@ function DownloadPage() {
   }
 
   return (
-    <div className="min-h-screen min-w-screen flex flex-col items-center justify-center h-screen text-center px-4">
+    <div className="flex flex-col items-center justify-center h-screen text-center px-4">
       <h2 className="text-2xl font-semibold text-green-600">
         Your file is ready!
       </h2>

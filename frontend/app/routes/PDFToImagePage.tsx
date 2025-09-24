@@ -1,21 +1,19 @@
-import React, { useState } from "react";
+import React from "react";
 import FileUploader from "../components/FileUploader";
 import { useJobHandler } from "../hooks/useJobHandler";
 import { useNavigate } from "react-router";
+import PreviewArea from "../components/preview/PreviewArea";
+import { useFileLoader } from "../hooks/useFileLoader";
 
 const PDFToImagePage: React.FC = () => {
   const { taskState, handleTask } = useJobHandler();
-  const [files, setFiles] = useState<File[]>([]);
+  const { items, addFiles, setItems } = useFileLoader();
   const navigate = useNavigate();
-
-  const handleFileUpload = (uploadedFiles: File[] | File) => {
-    const arr = Array.isArray(uploadedFiles) ? uploadedFiles : [uploadedFiles];
-    setFiles(arr);
-  };
+  const fileTypes = ".pdf";
 
   const startConversion = async () => {
     try {
-      const obj = await handleTask(files, "pdf-to-image");
+      const obj = await handleTask(items, "pdf-to-image");
       if (obj && obj.downloadUrl) {
         navigate(`/download/${obj.jobId}`, {
           state: {
@@ -32,8 +30,8 @@ const PDFToImagePage: React.FC = () => {
   };
 
   return (
-    <div className="pt-34 min-w-screen min-h-screen flex flex-col items-center justify-start p-8 bg-gray-50">
-      <div className="w-full max-w-4xl">
+    <div className="pt-34 flex flex-col items-center justify-start p-8 bg-gray-50">
+      <div className="w-full">
         <h1 className="text-3xl font-bold text-gray-800 mb-4 text-center">
           PDF to Image
         </h1>
@@ -41,9 +39,20 @@ const PDFToImagePage: React.FC = () => {
           Convert your PDF documents into high-quality images instantly.
         </p>
 
-        <FileUploader onFileSelect={handleFileUpload} acceptedTypes=".pdf" />
+        {items.length === 0 ? (
+          <FileUploader onFileSelect={addFiles} acceptedTypes={fileTypes} />
+        ) : (
+          <PreviewArea
+            items={items}
+            viewType="file"
+            acceptedTypes={fileTypes}
+            onDeleteFile={(id) =>
+              setItems((prev) => prev.filter((f) => f.id !== id))
+            }
+          />
+        )}
 
-        {files.length > 0 && (
+        {items.length > 0 && (
           <div className="mt-6 flex justify-center">
             <button
               onClick={startConversion}

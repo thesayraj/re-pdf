@@ -1,5 +1,6 @@
 import { useState } from "react";
 import API from "../api";
+import { InputFile } from "../types/file";
 
 enum TaskStates {
   None = "",
@@ -14,28 +15,35 @@ export function useJobHandler() {
   const [taskState, setTaskState] = useState(TaskStates.None);
 
   async function handleTask(
-    files: File[],
+    items: InputFile[],
     task_type: string,
     options: object = {}
   ) {
-    if (!files) return;
+    if (!items || items.length === 0) return;
 
     try {
       // Step 1: validate job
       setTaskState(TaskStates.Validating);
+
+      const upload_names = items.map((f) => f.id);
+
       const {
-        data: { job_id, upload_urls, upload_names },
+        data: { job_id, upload_urls },
       } = await API.post(`/validate/${task_type}`, {
-        files_info: files.map((f) => ({ name: f.name, size: f.size })),
+        files_info: items.map((item) => ({
+          name: item.file.name,
+          size: item.file.size,
+          upload_name: item.id,
+        })),
       });
 
       // Step 2: upload files (parallel)
       setTaskState(TaskStates.Uploading);
       await Promise.all(
-        files.map((file, i) =>
-          API.put(upload_urls[i], file, {
+        items.map((item, i) =>
+          API.put(upload_urls[i], item.file, {
             headers: {
-              "Content-Type": file.type || "application/octet-stream",
+              "Content-Type": item.file.type || "application/octet-stream",
             },
           })
         )

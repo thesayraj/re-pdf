@@ -1,7 +1,7 @@
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="mx-auto min-w-screen my-12 px-6 py-12 prose prose-slate dark:prose-invert">
+    <div className="mx-auto my-12 px-6 py-12 prose prose-slate dark:prose-invert">
       <h1 className="text-3xl font-bold mb-1">Privacy Policy</h1>
       <p className="mt-0 text-sm text-gray-500 dark:text-gray-400">
         Effective date: <strong>18 August, 2025</strong>

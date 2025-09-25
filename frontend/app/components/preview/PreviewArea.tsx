@@ -10,12 +10,17 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
   canAddMoreFiles,
   onDeleteFile,
   onAddFiles,
+  onPagesChange,
 }) => {
   const [pages, setPages] = useState<PageData[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const fileMap = useMemo(() => new Map(items.map((f) => [f.id, f])), [items]);
+
+  useEffect(() => {
+    onPagesChange?.(pages); // notify parent on every change
+  }, [pages, onPagesChange]);
 
   useEffect(() => {
     const processItems = async () => {

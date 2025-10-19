@@ -1,5 +1,7 @@
+import os
 import pymupdf
 from app.services.storage import storage
+from app.utils.pdf import repair_pdf
 
 import tempfile
 from typing import Dict, List
@@ -9,7 +11,9 @@ def delete_pages(job_id: str, inputs: List[str], options: Dict) -> Dict:
     page_data: List[Dict] = options["pages"]  # list of PageData dicts to KEEP
 
     with storage.input_file(job_id, file_name) as input_pdf, tempfile.TemporaryDirectory() as tmpdir:
-        src_doc = pymupdf.open(input_pdf)
+        repaired_pdf = os.path.join(tmpdir, "repaired.pdf")
+        repair_pdf(input_pdf, repaired_pdf)
+        src_doc = pymupdf.open(repaired_pdf)
 
         # Collect valid page indices to keep (0-based)
         pages_to_keep = []

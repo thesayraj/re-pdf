@@ -18,7 +18,10 @@ const PreviewCard: React.FC<PreviewCardProps> = ({
 
         <div className="absolute top-1 right-1 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button
-            onClick={onZoom}
+            onClick={(e) => {
+              e.currentTarget.blur(); // avoid double click (like extra click from space bar)
+              onZoom();
+            }}
             className="text-green-500 rounded hover:text-green-600"
           >
             <ZoomInIcon />

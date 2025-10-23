@@ -12,6 +12,7 @@ type BasePreviewAreaProps = {
   acceptedTypes: string;
   onDeleteFile?: (id: string) => void;
   onPagesChange?: (pages: PageData[]) => void;
+  enableDnd?: boolean;
 };
 
 type WithAddFiles = BasePreviewAreaProps & {

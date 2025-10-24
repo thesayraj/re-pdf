@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import PreviewCardWrapper from "./PreviewCardWrapper";
 import FileUploader from "../FileUploader";
 import { PageData, PreviewAreaProps } from "../../types/preview";
+import { DndGridWrapper } from "./dnd/DndGridWrapper";
 
 const PreviewArea: React.FC<PreviewAreaProps> = ({
   items,
@@ -11,6 +12,7 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
   onDeleteFile,
   onAddFiles,
   onPagesChange,
+  enableDnd = false,
 }) => {
   const [pages, setPages] = useState<PageData[]>([]);
   const [loading, setLoading] = useState(false);
@@ -71,7 +73,16 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
     }
   };
 
-  return (
+  const handleReorder = (newOrder: PageData[]) => {
+    setPages(newOrder);
+    onPagesChange?.(newOrder);
+  };
+
+  const gridClass = `bg-blue-50 rounded-2xl w-full
+    grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4
+    justify-center justify-items-center p-5`;
+
+  const grid = (
     <div className="w-full">
       {/* Add More Files button */}
       <div className="flex justify-center mb-4">
@@ -85,12 +96,7 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
         )}
       </div>
 
-      {/* Grid */}
-      <div
-        className="bg-blue-50 rounded-2xl w-full
-          grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4
-          justify-center justify-items-center p-5"
-      >
+      <div className={gridClass}>
         {loading && (
           <p className="text-center text-blue-500 col-span-full">
             Loading pages...
@@ -114,6 +120,30 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
       </div>
     </div>
   );
+
+  if (enableDnd) {
+    return (
+      <DndGridWrapper
+        items={pages}
+        onReorder={handleReorder}
+        renderItem={(page) => {
+          const file = fileMap.get(page.fileId);
+          if (!file) return null;
+          return (
+            <PreviewCardWrapper
+              key={page.id}
+              file={file}
+              page={page}
+              onDelete={handleDeletePage}
+            />
+          );
+        }}
+        gridClass={gridClass}
+      />
+    );
+  }
+
+  return grid;
 };
 
 export default PreviewArea;

@@ -6,7 +6,7 @@ import {
   FaRegTrashCan,
   FaImages,
   FaFilePdf,
-  FaFileWord,
+  FaSort,
   FaSignature,
   FaLock,
   FaUnlock,
@@ -35,10 +35,10 @@ const ToolList: React.FC = () => {
       route: "/compress-pdf",
     },
     {
-      icon: FaFileWord,
-      title: "PDF to WORD",
-      description: "Convert PDF document to WORD",
-      route: "/pdf-to-word",
+      icon: FaSort,
+      title: "Rearrange PDF Pages",
+      description: "Easily drag and drop pages to reorder your PDF.",
+      route: "/rearrange-pdf-pages",
     },
     {
       icon: FaImages,

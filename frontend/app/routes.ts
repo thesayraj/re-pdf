@@ -9,4 +9,5 @@ export default [
   route("download/:jobId", "routes/DownloadPage.tsx"),
   route("compress-pdf", "routes/CompressPDFPage.tsx"),
   route("delete-pdf-pages", "routes/DeletePDFPagesPage.tsx"),
+  route("rearrange-pdf-pages", "routes/RearrangePDFPagesPage.tsx"),
 ] satisfies RouteConfig;

@@ -2,11 +2,13 @@ from typing import Dict, List
 from app.services.pdf.pdf_to_image import pdf_to_image
 from app.services.pdf.compress_pdf import compress_pdf
 from app.services.pdf.delete_pages import delete_pages
+from app.services.pdf.rearrange_pages import rearrange_pages
 
 TASKS = {
     "pdf-to-image": pdf_to_image,
     "compress-pdf": compress_pdf,
     "delete-pdf-pages": delete_pages,
+    "rearrange-pdf-pages": rearrange_pages,
 }
 
 def run_task(task_name: str, job_id: str, upload_names: List, options: dict) -> Dict:

@@ -10,4 +10,5 @@ export default [
   route("compress-pdf", "routes/CompressPDFPage.tsx"),
   route("delete-pdf-pages", "routes/DeletePDFPagesPage.tsx"),
   route("rearrange-pdf-pages", "routes/RearrangePDFPagesPage.tsx"),
+  route("img-to-pdf", "routes/ImageToPDFPage.tsx"),
 ] satisfies RouteConfig;

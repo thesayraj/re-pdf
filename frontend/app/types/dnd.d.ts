@@ -8,5 +8,4 @@ export interface DndGridWrapperProps<T> {
   onReorder: (newOrder: T[]) => void;
   renderItem: (item: T) => React.ReactNode;
   getId?: (item: T) => string; // defaults to item.id
-  gridClass: string;
 }

@@ -19,7 +19,6 @@ export function DndGridWrapper<T extends { id: string }>({
   onReorder,
   renderItem,
   getId = (item) => item.id,
-  gridClass,
 }: DndGridWrapperProps<T>) {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } })
@@ -42,13 +41,11 @@ export function DndGridWrapper<T extends { id: string }>({
       onDragEnd={handleDragEnd}
     >
       <SortableContext items={items.map(getId)} strategy={rectSortingStrategy}>
-        <div className={gridClass}>
-          {items.map((item) => (
-            <SortableItem key={getId(item)} id={getId(item)}>
-              {renderItem(item)}
-            </SortableItem>
-          ))}
-        </div>
+        {items.map((item) => (
+          <SortableItem key={getId(item)} id={getId(item)}>
+            {renderItem(item)}
+          </SortableItem>
+        ))}
       </SortableContext>
     </DndContext>
   );

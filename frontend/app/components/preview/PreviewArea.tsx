@@ -78,11 +78,21 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
     onPagesChange?.(newOrder);
   };
 
-  const gridClass = `bg-blue-50 rounded-2xl w-full
-    grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4
-    justify-center justify-items-center p-5`;
+  const renderCard = (page: PageData) => {
+    const file = fileMap.get(page.fileId);
+    if (!file) return null;
 
-  const grid = (
+    return (
+      <PreviewCardWrapper
+        key={page.id}
+        file={file}
+        page={page}
+        onDelete={handleDeletePage}
+      />
+    );
+  };
+
+  return (
     <div className="w-full">
       {/* Add More Files button */}
       <div className="flex justify-center mb-4">
@@ -96,7 +106,11 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
         )}
       </div>
 
-      <div className={gridClass}>
+      <div
+        className="bg-blue-50 rounded-2xl w-full
+          grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4
+          justify-center justify-items-center p-5"
+      >
         {loading && (
           <p className="text-center text-blue-500 col-span-full">
             Loading pages...
@@ -105,45 +119,19 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
         {error && (
           <p className="text-center text-red-500 col-span-full">{error}</p>
         )}
-        {pages.map((page) => {
-          const file = fileMap.get(page.fileId);
-          if (!file) return null;
-          return (
-            <PreviewCardWrapper
-              key={page.id}
-              file={file}
-              page={page}
-              onDelete={handleDeletePage}
-            />
-          );
-        })}
+
+        {enableDnd ? (
+          <DndGridWrapper
+            items={pages}
+            onReorder={handleReorder}
+            renderItem={renderCard}
+          />
+        ) : (
+          pages.map(renderCard)
+        )}
       </div>
     </div>
   );
-
-  if (enableDnd) {
-    return (
-      <DndGridWrapper
-        items={pages}
-        onReorder={handleReorder}
-        renderItem={(page) => {
-          const file = fileMap.get(page.fileId);
-          if (!file) return null;
-          return (
-            <PreviewCardWrapper
-              key={page.id}
-              file={file}
-              page={page}
-              onDelete={handleDeletePage}
-            />
-          );
-        }}
-        gridClass={gridClass}
-      />
-    );
-  }
-
-  return grid;
 };
 
 export default PreviewArea;

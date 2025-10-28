@@ -60,9 +60,9 @@ const ToolList: React.FC = () => {
     },
     {
       icon: FaFilePdf,
-      title: "JPG to PDF",
+      title: "Image to PDF",
       description: "Convert one or more JPG files to PDF",
-      route: "/jpg-to-pdf",
+      route: "/img-to-pdf",
     },
     {
       icon: FaScissors,

@@ -4,6 +4,7 @@ from app.services.pdf.compress_pdf import compress_pdf
 from app.services.pdf.delete_pages import delete_pages
 from app.services.pdf.rearrange_pages import rearrange_pages
 from app.services.pdf.image_to_pdf import image_to_pdf
+from app.services.pdf.unlock_pdf import unlock_pdf
 
 TASKS = {
     "pdf-to-image": pdf_to_image,
@@ -11,14 +12,15 @@ TASKS = {
     "delete-pdf-pages": delete_pages,
     "rearrange-pdf-pages": rearrange_pages,
     "img-to-pdf": image_to_pdf,
+    "unlock-pdf": unlock_pdf,
 }
 
-def run_task(task_name: str, job_id: str, upload_names: List, options: dict) -> Dict:
+def run_task(task_name: str, job_id: str, upload_info: List, options: Dict) -> Dict:
     if task_name not in TASKS:
         raise ValueError(f"Unknown task: {task_name}")
 
     # Each tool returns an output artifact (e.g. single file/zip) via storage.save_output*
     tool_fn = TASKS[task_name]
-    result = tool_fn(job_id=job_id, inputs=upload_names, options=options)
+    result = tool_fn(job_id=job_id, inputs=upload_info, options=options)
 
     return result

@@ -5,13 +5,17 @@ import pymupdf
 
 from typing import List, Dict
 from app.services.storage import storage
+from app.types.common import UpFileInfo
 
 
-def pdf_to_image(job_id: str, inputs: List, options: dict) -> Dict:
+def pdf_to_image(job_id: str, inputs: List[UpFileInfo], options: Dict) -> Dict:
+    file_info = inputs[0]
+    file_name = file_info.name
+
     ext = options.get("ext", "png")
     dpi = options.get("dpi", 300)
 
-    with storage.input_file(job_id, inputs[0]) as local_pdf, tempfile.TemporaryDirectory() as tmpdir:
+    with storage.input_file(job_id, file_name) as local_pdf, tempfile.TemporaryDirectory() as tmpdir:
         doc = pymupdf.open(local_pdf)
 
         image_paths = []

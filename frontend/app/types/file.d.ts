@@ -7,6 +7,7 @@ export type InputFile =
       file: File;
       pdf: PDFDocumentProxy;
       numPages: number;
+      psw: string;
     }
   | {
       id: string;

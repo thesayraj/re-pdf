@@ -1,10 +1,15 @@
-import type { PDFDocumentProxy } from "pdfjs-dist/types/src/display/api";
+import type {
+  DocumentInitParameters,
+  PDFDocumentProxy,
+} from "pdfjs-dist/types/src/display/api";
 
 export interface PDFJS {
   GlobalWorkerOptions: {
     workerSrc: string;
   };
-  getDocument: (src: Uint8Array | ArrayBuffer | string) => {
+  getDocument: (
+    src: Uint8Array | ArrayBuffer | string | DocumentInitParameters
+  ) => {
     promise: Promise<PDFDocumentProxy>;
   };
   version: string;

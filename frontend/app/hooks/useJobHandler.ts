@@ -25,8 +25,6 @@ export function useJobHandler() {
       // Step 1: validate job
       setTaskState(TaskStates.Validating);
 
-      const upload_names = items.map((f) => f.id);
-
       const {
         data: { job_id, upload_urls },
       } = await API.post(`/validate/${task_type}`, {
@@ -50,9 +48,14 @@ export function useJobHandler() {
       );
 
       // Step 3: trigger processing
+      const upload_info = items.map((f) => ({
+        name: f.id,
+        psw: f.type === "pdf" ? f.psw : "",
+      }));
+
       setTaskState(TaskStates.TriggeringJob);
       await API.post(`/tasks/${task_type}/${job_id}`, {
-        upload_names,
+        upload_info,
         options,
       });
 

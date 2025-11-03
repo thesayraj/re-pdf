@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import PreviewArea from "../components/preview/PreviewArea";
 import { useFileLoader } from "../hooks/useFileLoader";
 import { PageData } from "../types/preview";
+import ActionBar from "../components/ActionBar";
 
 const ImageToPDFPage: React.FC = () => {
   const { taskState, handleTask } = useJobHandler();
@@ -66,16 +67,12 @@ const ImageToPDFPage: React.FC = () => {
         )}
 
         {items.length > 0 && (
-          <div className="mt-6 flex justify-center">
-            <button
-              onClick={startConversion}
-              disabled={!!taskState}
-              className={`px-6 py-2 rounded-lg font-medium text-white cursor-pointer
-                ${taskState ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
-            >
-              {taskState ? taskState : "Convert"}
-            </button>
-          </div>
+          <ActionBar
+            btnName="Convert"
+            btnDisabled={!!taskState}
+            taskState={taskState}
+            cb={startConversion}
+          />
         )}
       </div>
       <div className="mt-40 space-y-4">

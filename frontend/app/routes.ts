@@ -12,4 +12,5 @@ export default [
   route("rearrange-pdf-pages", "routes/RearrangePDFPagesPage.tsx"),
   route("img-to-pdf", "routes/ImageToPDFPage.tsx"),
   route("unlock-pdf", "routes/UnlockPDFPage.tsx"),
+  route("protect-pdf", "routes/ProtectPDFPage.tsx"),
 ] satisfies RouteConfig;

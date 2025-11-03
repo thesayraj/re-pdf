@@ -11,4 +11,5 @@ export default [
   route("delete-pdf-pages", "routes/DeletePDFPagesPage.tsx"),
   route("rearrange-pdf-pages", "routes/RearrangePDFPagesPage.tsx"),
   route("img-to-pdf", "routes/ImageToPDFPage.tsx"),
+  route("unlock-pdf", "routes/UnlockPDFPage.tsx"),
 ] satisfies RouteConfig;

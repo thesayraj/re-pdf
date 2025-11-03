@@ -1,5 +1,6 @@
 import pymupdf
 from app.services.storage import storage
+from app.types.common import UpFileInfo
 
 import os
 import tempfile
@@ -20,8 +21,9 @@ GHOSTSCRIPT_OPTIONS = [
 ]
 
 
-def compress_pdf(job_id: str, inputs: List[str], options: str) -> Dict:
-    file_name = inputs[0]
+def compress_pdf(job_id: str, inputs: List[UpFileInfo], options: Dict) -> Dict:
+    file_info = inputs[0]
+    file_name = file_info.name
 
     with storage.input_file(job_id, file_name) as input_pdf, tempfile.TemporaryDirectory() as tmpdir:
         cleaned_pdf = os.path.join(tmpdir, "cleaned.pdf")

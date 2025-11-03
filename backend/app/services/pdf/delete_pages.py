@@ -2,12 +2,15 @@ import os
 import pymupdf
 from app.services.storage import storage
 from app.utils.pdf import repair_pdf
+from app.types.common import UpFileInfo
 
 import tempfile
 from typing import Dict, List
 
-def delete_pages(job_id: str, inputs: List[str], options: Dict) -> Dict:
-    file_name = inputs[0]
+
+def delete_pages(job_id: str, inputs: List[UpFileInfo], options: Dict) -> Dict:
+    file_info = inputs[0]
+    file_name = file_info.name
     page_data: List[Dict] = options["pages"]  # list of PageData dicts to KEEP
 
     with storage.input_file(job_id, file_name) as input_pdf, tempfile.TemporaryDirectory() as tmpdir:

@@ -1,11 +1,13 @@
 import pymupdf
 import os
 from app.services.storage import storage
+from app.types.common import UpFileInfo
 
 import tempfile
 from typing import Dict, List
 
-def image_to_pdf(job_id: str, inputs: List[str], options: Dict) -> Dict:
+
+def image_to_pdf(job_id: str, inputs: List[UpFileInfo], options: Dict) -> Dict:
     page_data: List[Dict] = options["pages"] # ordered collection
     file_names = [p["fileId"] for p in page_data]
 

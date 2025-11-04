@@ -13,17 +13,30 @@ def unlock_pdf(job_id: str, inputs: List[UpFileInfo], options: Dict) -> Dict:
     file_psw = file_info.psw
 
     with storage.input_file(job_id, file_name) as input_pdf, tempfile.TemporaryDirectory() as tmpdir:
-        doc = pymupdf.open(input_pdf)
+        try:
+            # Attempt to open the document
+            doc = pymupdf.open(input_pdf)
 
-        if doc.needs_pass:
-            rc = doc.authenticate(file_psw)
+            if doc.needs_pass:
+                auth_result = doc.authenticate(file_psw)
 
-            if rc not in (1, 4, 6):  # Authorization levels including ownership
-                print("Authentication failed. Incorrect password.")
-                return
+                # Codes 1, 4, 6 = valid user or owner password
+                if auth_result not in (1, 4, 6):
+                    return {
+                        "error": "invalid_password",
+                        "msg": "The password given is incorrect."
+                    }
 
-        result_pdf = os.path.join(tmpdir, "result.pdf")
-        doc.save(result_pdf, encryption=pymupdf.PDF_ENCRYPT_NONE)
+            # Save the PDF with *no encryption at all*
+            result_pdf = os.path.join(tmpdir, "result.pdf")
+            doc.save(result_pdf, encryption=pymupdf.PDF_ENCRYPT_NONE)
+            doc.close()
+
+        except:
+            return {
+                "error": "unlock_failed",
+                "msg": "Failed to unlock PDF."
+            }
 
         out_meta = storage.save_output_file(result_pdf, job_id, ".pdf")
 

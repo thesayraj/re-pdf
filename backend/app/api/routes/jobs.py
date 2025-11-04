@@ -20,6 +20,9 @@ def get_status(job_id: str):
 
     if job.is_finished:
         result = job.result or {}
+        if "error" in result:
+            return {"status": "failed", "reason": result["msg"]}
+
         out_f_name = result["out_f_name"]
         url = storage.generate_download_url(job_id, out_f_name)
         return {"status": "finished", "download_url": url}

@@ -25,8 +25,8 @@ const UnlockPDFPage: React.FC = () => {
         });
       }
     } catch (err) {
-      alert("Conversion failed");
-      console.log(err);
+      alert(err);
+      console.error(err);
     }
   };
 
@@ -56,7 +56,7 @@ const UnlockPDFPage: React.FC = () => {
         {items.length > 0 && (
           <div className="mt-6 flex justify-center">
             <button
-              onClick={() => unlock("")}
+              onClick={unlock}
               disabled={!!taskState}
               className={`px-6 py-2 rounded-lg font-medium text-white cursor-pointer
                 ${taskState ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}

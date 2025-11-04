@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { useFileLoader } from "../hooks/useFileLoader";
 import PreviewArea from "../components/preview/PreviewArea";
 import { PageData } from "../types/preview";
+import ActionBar from "../components/ActionBar";
 
 const RearrangePDFPagesPage: React.FC = () => {
   const { taskState, handleTask } = useJobHandler();
@@ -62,16 +63,12 @@ const RearrangePDFPagesPage: React.FC = () => {
         )}
 
         {items.length > 0 && (
-          <div className="mt-6 flex justify-center">
-            <button
-              onClick={applyChanges}
-              disabled={!!taskState}
-              className={`px-6 py-2 rounded-lg font-medium text-white cursor-pointer
-                ${taskState ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
-            >
-              {taskState ? taskState : "Apply Changes"}
-            </button>
-          </div>
+          <ActionBar
+            btnName="Apply Changes"
+            btnDisabled={!!taskState}
+            taskState={taskState}
+            cb={applyChanges}
+          />
         )}
       </div>
       <div className="mt-40 space-y-4">

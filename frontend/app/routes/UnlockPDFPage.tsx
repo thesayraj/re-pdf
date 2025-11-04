@@ -25,8 +25,8 @@ const UnlockPDFPage: React.FC = () => {
         });
       }
     } catch (err) {
-      alert("Conversion failed");
-      console.log(err);
+      alert(err);
+      console.error(err);
     }
   };
 

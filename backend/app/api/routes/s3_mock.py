@@ -3,6 +3,7 @@ Mock S3-like API to provide file upload and download functionality.
 """
 from fastapi import APIRouter, HTTPException, Request
 from fastapi.responses import FileResponse
+from fastapi.concurrency import run_in_threadpool
 from app.core.config import settings
 
 from pathlib import Path
@@ -20,11 +21,11 @@ async def upload_file(full_path: str, request: Request):
 
     dest.parent.mkdir(parents=True, exist_ok=True)
 
-    body = await request.body()
     with open(dest, "wb") as f:
-        f.write(body)
+        async for chunk in request.stream():
+            await run_in_threadpool(f.write, chunk)
 
-    return {"message": "File uploaded successfully", "path": full_path}
+    return {"message": "File uploaded successfully"}
 
 
 @router.get("/s3-mock/{full_path:path}")

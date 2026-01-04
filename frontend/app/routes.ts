@@ -13,4 +13,5 @@ export default [
   route("img-to-pdf", "routes/ImageToPDFPage.tsx"),
   route("unlock-pdf", "routes/UnlockPDFPage.tsx"),
   route("protect-pdf", "routes/ProtectPDFPage.tsx"),
+  route("split-pdf", "routes/SplitPDFPagesPage.tsx"),
 ] satisfies RouteConfig;

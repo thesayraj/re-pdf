@@ -25,7 +25,18 @@ type WithoutAddFiles = BasePreviewAreaProps & {
   onAddFiles?: never; // explicitly disallowed
 };
 
-export type PreviewAreaProps = WithAddFiles | WithoutAddFiles;
+type WithSplit = BasePreviewAreaProps & {
+  enableSplit: true;
+  onSplitChange: (splits: Set<number>) => void; // required
+};
+
+type WithoutSplit = BasePreviewAreaProps & {
+  enableSplit?: false; // default false or undefined
+  onSplitChange?: never; // explicitly disallowed
+};
+
+export type PreviewAreaProps = (WithAddFiles | WithoutAddFiles) &
+  (WithSplit | WithoutSplit);
 
 export interface PreviewCardWrapperProps {
   file: InputFile;

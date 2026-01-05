@@ -6,6 +6,7 @@ from app.services.pdf.rearrange_pages import rearrange_pages
 from app.services.pdf.image_to_pdf import image_to_pdf
 from app.services.pdf.unlock_pdf import unlock_pdf
 from app.services.pdf.protect_pdf import protect_pdf
+from app.services.pdf.split_pdf import split_pdf
 
 TASKS = {
     "pdf-to-image": pdf_to_image,
@@ -15,6 +16,7 @@ TASKS = {
     "img-to-pdf": image_to_pdf,
     "unlock-pdf": unlock_pdf,
     "protect-pdf": protect_pdf,
+    "split-pdf": split_pdf,
 }
 
 def run_task(task_name: str, job_id: str, upload_info: List, options: Dict) -> Dict:

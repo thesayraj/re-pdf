@@ -13,6 +13,7 @@ type BasePreviewAreaProps = {
   onDeleteFile?: (id: string) => void;
   onPagesChange?: (pages: PageData[]) => void;
   enableDnd?: boolean;
+  disableDeleteBtn?: boolean;
 };
 
 type WithAddFiles = BasePreviewAreaProps & {
@@ -41,12 +42,10 @@ export type PreviewAreaProps = (WithAddFiles | WithoutAddFiles) &
 export interface PreviewCardWrapperProps {
   file: InputFile;
   page: PageData;
-  onDelete: (id: string) => void;
 }
 
 export interface PreviewCardProps {
   page: PageData;
-  onDelete: (id: string) => void;
   onZoom: () => void;
   children: React.ReactNode;
 }
@@ -59,3 +58,8 @@ export interface ZoomContextValue {
   openZoom: (content: ZoomContent) => void;
   closeZoom: () => void;
 }
+
+export type DeleteContextValue = {
+  enabled: boolean;
+  onDelete?: (id: string) => void;
+};

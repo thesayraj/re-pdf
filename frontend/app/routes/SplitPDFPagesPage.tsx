@@ -8,7 +8,7 @@ import ActionBar from "../components/ActionBar";
 
 const SplitPDFPagesPage: React.FC = () => {
   const { taskState, handleTask } = useJobHandler();
-  const { items, addFiles, setItems } = useFileLoader();
+  const { items, addFiles } = useFileLoader();
   const [splits, setSplits] = useState<Set<number>>(new Set());
 
   const navigate = useNavigate();
@@ -53,11 +53,9 @@ const SplitPDFPagesPage: React.FC = () => {
             items={items}
             viewType="page"
             acceptedTypes={fileTypes}
-            onDeleteFile={(id) =>
-              setItems((prev) => prev.filter((f) => f.id !== id))
-            }
             enableSplit
             onSplitChange={setSplits}
+            disableDeleteBtn
           />
         )}
 

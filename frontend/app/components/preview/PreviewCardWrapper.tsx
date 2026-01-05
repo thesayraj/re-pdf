@@ -7,7 +7,6 @@ import { useZoom } from "../../hooks/useZoom";
 const PreviewCardWrapper: React.FC<PreviewCardWrapperProps> = ({
   file,
   page,
-  onDelete,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const renderTaskRef = useRef<RenderTask | null>(null);
@@ -79,7 +78,7 @@ const PreviewCardWrapper: React.FC<PreviewCardWrapperProps> = ({
   };
 
   return (
-    <PreviewCard page={page} onDelete={onDelete} onZoom={handleZoom}>
+    <PreviewCard page={page} onZoom={handleZoom}>
       {file.type === "pdf" && (
         <canvas ref={canvasRef} className="w-full h-full" />
       )}

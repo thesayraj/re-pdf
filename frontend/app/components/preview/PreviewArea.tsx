@@ -1,9 +1,15 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, createContext } from "react";
 import PreviewCardWrapper from "./PreviewCardWrapper";
 import FileUploader from "../FileUploader";
-import { PageData, PreviewAreaProps } from "../../types/preview";
+import {
+  PageData,
+  PreviewAreaProps,
+  DeleteContextValue,
+} from "../../types/preview";
 import { DndGridWrapper } from "./dnd/DndGridWrapper";
 import { FaScissors as ScissorsIcon } from "react-icons/fa6";
+
+export const DeletePageContext = createContext<DeleteContextValue | null>(null);
 
 const PreviewArea: React.FC<PreviewAreaProps> = ({
   items,
@@ -16,6 +22,7 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
   enableDnd = false,
   enableSplit,
   onSplitChange,
+  disableDeleteBtn = false,
 }) => {
   const [pages, setPages] = useState<PageData[]>([]);
   const [splits, setSplits] = useState<Set<number>>(new Set());
@@ -104,11 +111,7 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
 
     return (
       <div key={page.id} className="flex items-center">
-        <PreviewCardWrapper
-          file={file}
-          page={page}
-          onDelete={handleDeletePage}
-        />
+        <PreviewCardWrapper file={file} page={page} />
 
         {enableSplit && (
           <div
@@ -156,15 +159,19 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
           <p className="text-center text-red-500 col-span-full">{error}</p>
         )}
 
-        {enableDnd ? (
-          <DndGridWrapper
-            items={pages}
-            onReorder={handleReorder}
-            renderItem={renderCard}
-          />
-        ) : (
-          pages.map(renderCard)
-        )}
+        <DeletePageContext.Provider
+          value={{ enabled: !disableDeleteBtn, onDelete: handleDeletePage }}
+        >
+          {enableDnd ? (
+            <DndGridWrapper
+              items={pages}
+              onReorder={handleReorder}
+              renderItem={renderCard}
+            />
+          ) : (
+            pages.map(renderCard)
+          )}
+        </DeletePageContext.Provider>
       </div>
     </div>
   );

@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Trash2 as TrashIcon, ZoomInIcon } from "lucide-react";
 import { PreviewCardProps } from "../../types/preview";
+import { DeletePageContext } from "./PreviewArea";
 
 const PreviewCard: React.FC<PreviewCardProps> = ({
   page,
-  onDelete,
   onZoom,
   children,
 }) => {
+  const ctx = useContext(DeletePageContext);
+
   return (
     <div className="flex flex-col items-center">
       <div
@@ -26,12 +28,14 @@ const PreviewCard: React.FC<PreviewCardProps> = ({
           >
             <ZoomInIcon />
           </button>
-          <button
-            onClick={() => onDelete(page.id)}
-            className="text-red-500 rounded hover:text-red-600"
-          >
-            <TrashIcon />
-          </button>
+          {ctx?.enabled && (
+            <button
+              onClick={() => ctx.onDelete?.(page.id)}
+              className="text-red-500 rounded hover:text-red-600"
+            >
+              <TrashIcon />
+            </button>
+          )}
         </div>
       </div>
 

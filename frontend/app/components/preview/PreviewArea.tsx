@@ -1,8 +1,15 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, createContext } from "react";
 import PreviewCardWrapper from "./PreviewCardWrapper";
 import FileUploader from "../FileUploader";
-import { PageData, PreviewAreaProps } from "../../types/preview";
+import {
+  PageData,
+  PreviewAreaProps,
+  DeleteContextValue,
+} from "../../types/preview";
 import { DndGridWrapper } from "./dnd/DndGridWrapper";
+import { FaScissors as ScissorsIcon } from "react-icons/fa6";
+
+export const DeletePageContext = createContext<DeleteContextValue | null>(null);
 
 const PreviewArea: React.FC<PreviewAreaProps> = ({
   items,
@@ -13,8 +20,12 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
   onAddFiles,
   onPagesChange,
   enableDnd = false,
+  enableSplit,
+  onSplitChange,
+  disableDeleteBtn = false,
 }) => {
   const [pages, setPages] = useState<PageData[]>([]);
+  const [splits, setSplits] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -23,6 +34,10 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
   useEffect(() => {
     onPagesChange?.(pages); // notify parent on every change
   }, [pages, onPagesChange]);
+
+  useEffect(() => {
+    onSplitChange?.(splits);
+  }, [splits, onSplitChange]);
 
   useEffect(() => {
     const processItems = async () => {
@@ -78,17 +93,41 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
     onPagesChange?.(newOrder);
   };
 
+  const toggleCut = (pageNumber: number) => {
+    setSplits((prev) => {
+      const updated = new Set(prev);
+      if (!updated.delete(pageNumber)) {
+        updated.add(pageNumber);
+      }
+      return updated;
+    });
+  };
+
   const renderCard = (page: PageData) => {
     const file = fileMap.get(page.fileId);
     if (!file) return null;
 
+    const hasSplit = splits.has(page.pageNumber);
+
     return (
-      <PreviewCardWrapper
-        key={page.id}
-        file={file}
-        page={page}
-        onDelete={handleDeletePage}
-      />
+      <div key={page.id} className="flex items-center">
+        <PreviewCardWrapper file={file} page={page} />
+
+        {enableSplit && (
+          <div
+            className={`
+            flex flex-col items-center ml-7 cursor-pointer
+            transition-opacity
+            ${hasSplit ? "opacity-100" : "opacity-30 hover:opacity-100"}
+          `}
+            onClick={() => toggleCut(page.pageNumber)}
+          >
+            <DottedLine dotted={!hasSplit} />
+            <ScissorsIcon className="rotate-270 text-blue-500" />
+            <DottedLine dotted={!hasSplit} />
+          </div>
+        )}
+      </div>
     );
   };
 
@@ -120,18 +159,30 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
           <p className="text-center text-red-500 col-span-full">{error}</p>
         )}
 
-        {enableDnd ? (
-          <DndGridWrapper
-            items={pages}
-            onReorder={handleReorder}
-            renderItem={renderCard}
-          />
-        ) : (
-          pages.map(renderCard)
-        )}
+        <DeletePageContext.Provider
+          value={{ enabled: !disableDeleteBtn, onDelete: handleDeletePage }}
+        >
+          {enableDnd ? (
+            <DndGridWrapper
+              items={pages}
+              onReorder={handleReorder}
+              renderItem={renderCard}
+            />
+          ) : (
+            pages.map(renderCard)
+          )}
+        </DeletePageContext.Provider>
       </div>
     </div>
   );
 };
+
+const DottedLine: React.FC<{ dotted: boolean }> = ({ dotted }) => (
+  <div
+    className={`h-22 w-0.5 border-l-2 border-blue-400 ${
+      dotted ? "border-dotted" : ""
+    }`}
+  />
+);
 
 export default PreviewArea;

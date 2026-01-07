@@ -51,7 +51,7 @@ const SplitPDFPagesPage: React.FC = () => {
         ) : (
           <PreviewArea
             items={items}
-            viewType="page"
+            defaultViewType="page"
             acceptedTypes={fileTypes}
             enableSplit
             onSplitChange={setSplits}

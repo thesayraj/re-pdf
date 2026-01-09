@@ -27,6 +27,7 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
   onSplitChange,
   disableDeleteBtn = false,
   allowViewToggle = false,
+  onViewChange,
 }) => {
   const [pages, setPages] = useState<PageData[]>([]);
   const [splits, setSplits] = useState<Set<number>>(new Set());
@@ -43,6 +44,10 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
   useEffect(() => {
     onSplitChange?.(splits);
   }, [splits, onSplitChange]);
+
+  useEffect(() => {
+    onViewChange?.(viewType);
+  }, [viewType, onViewChange]);
 
   useEffect(() => {
     const processItems = async () => {

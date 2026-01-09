@@ -17,6 +17,7 @@ type BasePreviewAreaProps = {
   enableDnd?: boolean;
   disableDeleteBtn?: boolean;
   allowViewToggle?: boolean;
+  onViewChange?: (view: ViewType) => void;
 };
 
 type WithAddFiles = BasePreviewAreaProps & {

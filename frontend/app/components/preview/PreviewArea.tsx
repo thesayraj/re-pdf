@@ -10,6 +10,7 @@ import {
 } from "../../types/preview";
 import { DndGridWrapper } from "./dnd/DndGridWrapper";
 import { FaScissors as ScissorsIcon } from "react-icons/fa6";
+import { formatFileName } from "../../utils/helper";
 
 export const DeletePageContext = createContext<DeleteContextValue | null>(null);
 
@@ -112,10 +113,14 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
     if (!file) return null;
 
     const hasSplit = splits.has(page.pageNumber);
+    const name =
+      viewType === "page"
+        ? `Page ${page.pageNumber}`
+        : formatFileName(file.file.name);
 
     return (
       <div key={page.id} className="flex items-center">
-        <PreviewCardWrapper file={file} page={page} />
+        <PreviewCardWrapper file={file} page={page} displayName={name} />
 
         {enableSplit && (
           <div

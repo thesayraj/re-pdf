@@ -45,6 +45,7 @@ export type PreviewAreaProps = (WithAddFiles | WithoutAddFiles) &
 export interface PreviewCardWrapperProps {
   file: InputFile;
   page: PageData;
+  displayName: string
 }
 
 export interface PreviewCardProps {

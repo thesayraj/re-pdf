@@ -7,6 +7,7 @@ import { useZoom } from "../../hooks/useZoom";
 const PreviewCardWrapper: React.FC<PreviewCardWrapperProps> = ({
   file,
   page,
+  displayName,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const renderTaskRef = useRef<RenderTask | null>(null);
@@ -78,29 +79,33 @@ const PreviewCardWrapper: React.FC<PreviewCardWrapperProps> = ({
   };
 
   return (
-    <PreviewCard page={page} onZoom={handleZoom}>
-      {file.type === "pdf" && (
-        <canvas ref={canvasRef} className="w-full h-full" />
-      )}
-      {file.type === "image" && (
-        <img
-          src={URL.createObjectURL(file.file)}
-          alt={file.file.name}
-          className="w-full h-full bg-gray-100"
-          onError={() => setError("Failed to load image")}
-        />
-      )}
-      {loading && (
-        <p className="absolute inset-0 flex items-center justify-center text-gray-500 text-sm">
-          Loading...
-        </p>
-      )}
-      {error && (
-        <p className="absolute inset-0 flex items-center justify-center text-red-500 text-sm">
-          {error}
-        </p>
-      )}
-    </PreviewCard>
+    <div className="flex flex-col items-center">
+      <PreviewCard page={page} onZoom={handleZoom}>
+        {file.type === "pdf" && (
+          <canvas ref={canvasRef} className="w-full h-full" />
+        )}
+        {file.type === "image" && (
+          <img
+            src={URL.createObjectURL(file.file)}
+            alt={file.file.name}
+            className="w-full h-full bg-gray-100"
+            onError={() => setError("Failed to load image")}
+          />
+        )}
+        {loading && (
+          <p className="absolute inset-0 flex items-center justify-center text-gray-500 text-sm">
+            Loading...
+          </p>
+        )}
+        {error && (
+          <p className="absolute inset-0 flex items-center justify-center text-red-500 text-sm">
+            {error}
+          </p>
+        )}
+      </PreviewCard>
+
+      <div className="mt-2 text-black text-sm font-medium">{displayName}</div>
+    </div>
   );
 };
 

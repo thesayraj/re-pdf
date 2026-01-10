@@ -14,4 +14,5 @@ export default [
   route("unlock-pdf", "routes/UnlockPDFPage.tsx"),
   route("protect-pdf", "routes/ProtectPDFPage.tsx"),
   route("split-pdf", "routes/SplitPDFPagesPage.tsx"),
+  route("merge-pdf", "routes/MergePDFPage.tsx"),
 ] satisfies RouteConfig;

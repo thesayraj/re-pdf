@@ -44,7 +44,7 @@ const PDFToImagePage: React.FC = () => {
         ) : (
           <PreviewArea
             items={items}
-            viewType="file"
+            defaultViewType="file"
             acceptedTypes={fileTypes}
             onDeleteFile={(id) =>
               setItems((prev) => prev.filter((f) => f.id !== id))

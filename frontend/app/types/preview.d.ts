@@ -6,14 +6,18 @@ export interface PageData {
   pageNumber: number;
 }
 
+export type ViewType = "file" | "page"
+
 type BasePreviewAreaProps = {
   items: InputFile[];
-  viewType: "file" | "page";
+  defaultViewType: ViewType;
   acceptedTypes: string;
   onDeleteFile?: (id: string) => void;
   onPagesChange?: (pages: PageData[]) => void;
   enableDnd?: boolean;
   disableDeleteBtn?: boolean;
+  allowViewToggle?: boolean;
+  onViewChange?: (view: ViewType) => void;
 };
 
 type WithAddFiles = BasePreviewAreaProps & {
@@ -42,6 +46,7 @@ export type PreviewAreaProps = (WithAddFiles | WithoutAddFiles) &
 export interface PreviewCardWrapperProps {
   file: InputFile;
   page: PageData;
+  displayName: string
 }
 
 export interface PreviewCardProps {
@@ -63,3 +68,8 @@ export type DeleteContextValue = {
   enabled: boolean;
   onDelete?: (id: string) => void;
 };
+
+export type ViewToggleProps = {
+  view: ViewType;
+  onChange: (view: ViewType) => void;
+}

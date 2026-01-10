@@ -5,15 +5,18 @@ import {
   PageData,
   PreviewAreaProps,
   DeleteContextValue,
+  ViewType,
+  ViewToggleProps,
 } from "../../types/preview";
 import { DndGridWrapper } from "./dnd/DndGridWrapper";
 import { FaScissors as ScissorsIcon } from "react-icons/fa6";
+import { formatFileName } from "../../utils/helper";
 
 export const DeletePageContext = createContext<DeleteContextValue | null>(null);
 
 const PreviewArea: React.FC<PreviewAreaProps> = ({
   items,
-  viewType,
+  defaultViewType,
   acceptedTypes,
   canAddMoreFiles,
   onDeleteFile,
@@ -23,11 +26,14 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
   enableSplit,
   onSplitChange,
   disableDeleteBtn = false,
+  allowViewToggle = false,
+  onViewChange,
 }) => {
   const [pages, setPages] = useState<PageData[]>([]);
   const [splits, setSplits] = useState<Set<number>>(new Set());
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [viewType, setViewType] = useState<ViewType>(defaultViewType);
 
   const fileMap = useMemo(() => new Map(items.map((f) => [f.id, f])), [items]);
 
@@ -38,6 +44,10 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
   useEffect(() => {
     onSplitChange?.(splits);
   }, [splits, onSplitChange]);
+
+  useEffect(() => {
+    onViewChange?.(viewType);
+  }, [viewType, onViewChange]);
 
   useEffect(() => {
     const processItems = async () => {
@@ -108,10 +118,14 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
     if (!file) return null;
 
     const hasSplit = splits.has(page.pageNumber);
+    const name =
+      viewType === "page"
+        ? `Page ${page.pageNumber}`
+        : formatFileName(file.file.name);
 
     return (
       <div key={page.id} className="flex items-center">
-        <PreviewCardWrapper file={file} page={page} />
+        <PreviewCardWrapper file={file} page={page} displayName={name} />
 
         {enableSplit && (
           <div
@@ -144,6 +158,8 @@ const PreviewArea: React.FC<PreviewAreaProps> = ({
           />
         )}
       </div>
+
+      {allowViewToggle && <ViewToggle view={viewType} onChange={setViewType} />}
 
       <div
         className="bg-blue-50 rounded-2xl w-full
@@ -184,5 +200,35 @@ const DottedLine: React.FC<{ dotted: boolean }> = ({ dotted }) => (
     }`}
   />
 );
+
+const btnBase = "px-6 py-2 text-sm font-medium transition";
+const active = "bg-green-100 text-green-700";
+const inactive = "text-green-600 hover:bg-green-50";
+
+export const ViewToggle: React.FC<ViewToggleProps> = ({ view, onChange }) => {
+  return (
+    <div className="flex justify-center mb-4 mt-14">
+      <div className="inline-flex border border-gray-300 rounded-lg overflow-hidden">
+        <button
+          type="button"
+          onClick={() => onChange("file")}
+          className={`${btnBase} ${view === "file" ? active : inactive}`}
+        >
+          Files
+        </button>
+
+        <div className="w-px bg-gray-300" />
+
+        <button
+          type="button"
+          onClick={() => onChange("page")}
+          className={`${btnBase} ${view === "page" ? active : inactive}`}
+        >
+          Pages
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default PreviewArea;

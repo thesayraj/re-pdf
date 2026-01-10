@@ -50,7 +50,7 @@ const DeletePDFPagesPage: React.FC = () => {
         ) : (
           <PreviewArea
             items={items}
-            viewType="page"
+            defaultViewType="page"
             acceptedTypes={fileTypes}
             onDeleteFile={(id) =>
               setItems((prev) => prev.filter((f) => f.id !== id))

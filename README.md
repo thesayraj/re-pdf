@@ -22,8 +22,8 @@ Users can perform common PDF operations like **compress, convert, lock, unlock, 
 | 🔓 Unlock PDF       | ✅     | Remove user password (requires valid password)                |
 | 🔒 Lock PDF         | ✅     | Add password protection                                       |
 | 📉 Compress PDF     | ✅     | Lossless optimization + optional quality modes (in progress)  |
-| ✂️ Split PDF        | 🔜     | Extract page ranges into new files                            |
-| 🧩 Merge PDFs       | 🔜     | Combine multiple PDFs into one                                |
+| ✂️ Split PDF        | ✅     | Extract page ranges into new files                            |
+| 🧩 Merge PDFs       | ✅     | Combine multiple PDFs into one                                |
 | ✂️ Add Page Numbers | 🔜     | Add page numbers in PDF document                              |
 
 _(✅ Completed · ⏳ In Progress · 🔜 Planned)_

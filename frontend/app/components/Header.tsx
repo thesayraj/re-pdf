@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import logo from "../assets/app_icon.png";
 import { Link } from "react-router";
+import Logo from "./Logo";
 
 function Header() {
   const [hidden, setHidden] = useState(false);
@@ -47,10 +47,7 @@ function Header() {
         <div className="flex justify-start items-center h-13">
           {/* Logo */}
           <Link to="/">
-            <div className="flex items-center space-x-2 hover:transform hover:scale-102 transition duration-300">
-              <img src={logo} alt="logo" className="h-13 w-13" />
-              <span className="text-xl font-bold text-gray-800">RePDF</span>
-            </div>
+            <Logo />
           </Link>
 
           {/* Desktop Navigation */}
@@ -61,10 +58,16 @@ function Header() {
             <Link to="/split-pdf" className="text-gray-600 hover:text-blue-500">
               Split
             </Link>
-            <Link to="/compress-pdf" className="text-gray-600 hover:text-blue-500">
+            <Link
+              to="/compress-pdf"
+              className="text-gray-600 hover:text-blue-500"
+            >
               Compress
             </Link>
-            <Link to="/convert-pdf" className="text-gray-600 hover:text-blue-500">
+            <Link
+              to="/convert-pdf"
+              className="text-gray-600 hover:text-blue-500"
+            >
               Convert
             </Link>
           </nav>

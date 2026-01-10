@@ -9,7 +9,7 @@ const HomePage: React.FC = () => {
           <HeroSection />
         </section>
 
-        <section className="pt-24">
+        <section id="tools" className="pt-24">
           <ToolList />
         </section>
       </div>

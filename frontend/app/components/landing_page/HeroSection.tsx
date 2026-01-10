@@ -8,16 +8,19 @@ const HeroSection = () => {
           We help with your PDF tasks
         </h1>
         <p className="text-xl md:text-2xl text-blue-500 mb-8">
-          Easy, pleasant and productive PDF editor
+          Easy, pleasant and powerful PDF utilities
         </p>
-        <button className="cursor-pointer bg-blue-600 text-white text-lg md:text-xl px-6 py-3 rounded-lg
-         hover:bg-green-600 active:bg-green-600 transition duration-300">
-          <span className="font-bold">Edit a PDF document</span>
+        <a
+          href="#tools"
+          className="cursor-pointer bg-blue-600 text-white text-lg md:text-xl px-6 py-3 rounded-lg
+         hover:bg-green-600 active:bg-green-600 transition duration-300"
+        >
+          <span className="font-bold">Use PDF tools</span>
           <span className="font-light">
             &nbsp;– it's free
             <FaChevronRight className="inline-block ml-4" />
           </span>
-        </button>
+        </a>
       </div>
     </div>
   );

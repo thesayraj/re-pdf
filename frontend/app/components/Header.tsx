@@ -65,7 +65,7 @@ function Header() {
               Compress
             </Link>
             <Link
-              to="/convert-pdf"
+              to="/pdf-to-image"
               className="text-gray-600 hover:text-blue-500"
             >
               Convert
@@ -104,28 +104,28 @@ function Header() {
         >
           <nav className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
             <Link
-              to="/merge"
+              to="/merge-pdf"
               onClick={closeMobileMenu}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-500 hover:bg-gray-50"
             >
               Merge
             </Link>
             <Link
-              to="/split"
+              to="/split-pdf"
               onClick={closeMobileMenu}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-500 hover:bg-gray-50"
             >
               Split
             </Link>
             <Link
-              to="/compress"
+              to="/compress-pdf"
               onClick={closeMobileMenu}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-500 hover:bg-gray-50"
             >
               Compress
             </Link>
             <Link
-              to="/convert"
+              to="/pdf-to-image"
               onClick={closeMobileMenu}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-500 hover:bg-gray-50"
             >

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import logo from "../assets/app_icon.png";
 import { Link } from "react-router";
+import Logo from "./Logo";
 
 function Header() {
   const [hidden, setHidden] = useState(false);
@@ -47,10 +47,7 @@ function Header() {
         <div className="flex justify-start items-center h-13">
           {/* Logo */}
           <Link to="/">
-            <div className="flex items-center space-x-2 hover:transform hover:scale-102 transition duration-300">
-              <img src={logo} alt="logo" className="h-13 w-13" />
-              <span className="text-xl font-bold text-gray-800">RePDF</span>
-            </div>
+            <Logo />
           </Link>
 
           {/* Desktop Navigation */}
@@ -61,10 +58,16 @@ function Header() {
             <Link to="/split-pdf" className="text-gray-600 hover:text-blue-500">
               Split
             </Link>
-            <Link to="/compress-pdf" className="text-gray-600 hover:text-blue-500">
+            <Link
+              to="/compress-pdf"
+              className="text-gray-600 hover:text-blue-500"
+            >
               Compress
             </Link>
-            <Link to="/convert-pdf" className="text-gray-600 hover:text-blue-500">
+            <Link
+              to="/pdf-to-image"
+              className="text-gray-600 hover:text-blue-500"
+            >
               Convert
             </Link>
           </nav>
@@ -101,28 +104,28 @@ function Header() {
         >
           <nav className="px-2 pt-2 pb-3 space-y-1 bg-white border-t border-gray-200">
             <Link
-              to="/merge"
+              to="/merge-pdf"
               onClick={closeMobileMenu}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-500 hover:bg-gray-50"
             >
               Merge
             </Link>
             <Link
-              to="/split"
+              to="/split-pdf"
               onClick={closeMobileMenu}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-500 hover:bg-gray-50"
             >
               Split
             </Link>
             <Link
-              to="/compress"
+              to="/compress-pdf"
               onClick={closeMobileMenu}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-500 hover:bg-gray-50"
             >
               Compress
             </Link>
             <Link
-              to="/convert"
+              to="/pdf-to-image"
               onClick={closeMobileMenu}
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-600 hover:text-blue-500 hover:bg-gray-50"
             >

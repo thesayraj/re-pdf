@@ -1,3 +1,4 @@
+import { APP_CONFIG } from "../configs/appConfig";
 
 export default function PrivacyPolicyPage() {
   return (
@@ -8,9 +9,9 @@ export default function PrivacyPolicyPage() {
       </p>
 
       <p>
-        At <strong>RePDF</strong>, we respect your privacy. This Privacy
-        Policy explains how we handle your information when you use our PDF
-        editing tools.
+        At <strong>RePDF</strong>, we respect your privacy. This Privacy Policy
+        explains how we handle your information when you use our PDF editing
+        tools.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8">Key Points</h2>
@@ -38,8 +39,8 @@ export default function PrivacyPolicyPage() {
         We use minimal cookies only for essential site functions and to improve
         user experience.
         <br />
-        You may block cookies in your browser settings, though
-        some features may not work properly without them.
+        You may block cookies in your browser settings, though some features may
+        not work properly without them.
       </p>
 
       <h2 className="text-2xl font-semibold mt-8">Advertisements</h2>
@@ -52,13 +53,22 @@ export default function PrivacyPolicyPage() {
       </p>
 
       <h2 className="text-2xl font-semibold mt-8">Contact Us</h2>
-      <p>If you have any questions about this Privacy Policy, please contact us at:</p>
+      <p>
+        If you have any questions about this Privacy Policy, please contact us
+        at:
+      </p>
       <address className="not-italic space-y-1">
-        <div><strong>RePDF</strong></div>
-        <div>ADDRESS_LINE_1</div>
-        <div>ADDRESS_LINE_2</div>
         <div>
-          Email: <a className="text-blue-600 dark:text-blue-400" href="mailto:CONTACT_EMAIL">CONTACT_EMAIL</a>
+          <strong>RePDF</strong>
+        </div>
+        <div>
+          Email:{" "}
+          <a
+            className="text-blue-600 dark:text-blue-400"
+            href={`mailto: ${APP_CONFIG.CONTACT_EMAIL}`}
+          >
+            {APP_CONFIG.CONTACT_EMAIL}
+          </a>
         </div>
       </address>
 

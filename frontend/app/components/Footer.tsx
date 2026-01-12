@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from 'react-router';
+import { Link } from "react-router";
 
 const Footer: React.FC = () => {
   return (
@@ -9,9 +9,6 @@ const Footer: React.FC = () => {
         <div className="flex space-x-6">
           <Link to="/privacy" className="hover:underline">
             Privacy
-          </Link>
-          <Link to="/terms" className="hover:underline">
-            Terms
           </Link>
           <Link to="/contact" className="hover:underline">
             Contact

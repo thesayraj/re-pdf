@@ -1,0 +1,7 @@
+__pycache__
+*.py[bcod]
+*.egg-info
+*.env
+*.venv
+storage
+scratches

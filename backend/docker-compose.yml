@@ -1,0 +1,29 @@
+services:
+  api:
+    build: .
+    container_name: repdf-api
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./storage:/app/storage
+    depends_on:
+      - redis
+
+  worker:
+    build: .
+    container_name: repdf-worker
+    command: rq worker pdf-jobs
+    env_file:
+      - .env
+    volumes:
+      - ./storage:/app/storage
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: repdf-redis
+    ports:
+      - "6379:6379"
